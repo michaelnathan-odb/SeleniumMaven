@@ -42,12 +42,12 @@ public class EmailSubscriptionTest {
         ScreenSizeConfig.setScreenSize(driver, resolution);
         driver.get(site);
 
-        Thread.sleep(5000);
+        Thread.sleep(3000);
         Subscription subscription = new Subscription(driver);
         subscription.clickEmailSubs();
         subscription.emailFieldAll();
         subscription.submitFormEmail();
-        Thread.sleep(10000);
+        Thread.sleep(5000);
         subscription.validateDataEmail();
     }
 

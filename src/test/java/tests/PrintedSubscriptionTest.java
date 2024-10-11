@@ -42,12 +42,12 @@ public class PrintedSubscriptionTest {
         ScreenSizeConfig.setScreenSize(driver, resolution);
         driver.get(site);
 
-        Thread.sleep(5000);
+        Thread.sleep(3000);
         Subscription subscription = new Subscription(driver);
         subscription.clickPrintSubs();
         subscription.printFieldAll();
         subscription.submitFormPrint();
-        Thread.sleep(10000);
+        Thread.sleep(5000);
         subscription.validateDataPrint();
     }
 
