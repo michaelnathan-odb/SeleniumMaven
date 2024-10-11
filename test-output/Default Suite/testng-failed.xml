@@ -3,7 +3,7 @@
 <suite name="Failed suite [Default Suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="SeleniumMaven(failed)">
     <classes>
-      <class name="tests.SeleniumTest">
+      <class name="tests.EmailSubscriptionTest">
         <methods>
           <include name="setup"/>
           <include name="tearDown"/>
@@ -11,7 +11,7 @@
           <include name="testEmailSubscription"/>
           <include name="cleanUp"/>
         </methods>
-      </class> <!-- tests.SeleniumTest -->
+      </class> <!-- tests.EmailSubscriptionTest -->
     </classes>
   </test> <!-- SeleniumMaven(failed) -->
 </suite> <!-- Failed suite [Default Suite] -->

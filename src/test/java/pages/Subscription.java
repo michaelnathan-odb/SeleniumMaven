@@ -9,8 +9,6 @@ import org.testng.asserts.SoftAssert;
 import utils.FormData;
 import java.time.Duration;
 
-import static tests.SeleniumTest.test;
-
 public class Subscription {
     private final WebDriver driver;
 
@@ -127,21 +125,11 @@ public class Subscription {
         String expectedStatus = "There was an error trying to send your message. Please try again later.";
         String actualStatus = driver.findElement(By.xpath(successStatusP)).getText();
         softAssert.assertEquals(actualStatus,expectedStatus);
-        if (expectedStatus.equalsIgnoreCase(actualStatus)){
-            test.log(Status.PASS,"Test Passed for Print Subscription");
-        } else {
-            test.log(Status.FAIL, "The requirement doesn't meet");
-        }
     }
 
     public void validateDataEmail(){
         String expectedStatus = "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.";
         String actualStatus = driver.findElement(By.xpath(successStatus)).getText();
         softAssert.assertEquals(actualStatus,expectedStatus);
-        if (expectedStatus.equalsIgnoreCase(actualStatus)){
-            test.log(Status.PASS,"Test Passed for Email Subscription");
-        } else {
-            test.log(Status.FAIL, "The requirement doesn't meet");
-        }
     }
 }
