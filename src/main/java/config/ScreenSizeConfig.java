@@ -5,6 +5,8 @@ import org.openqa.selenium.Dimension;
 
 public class ScreenSizeConfig {
     public static void setScreenSize(WebDriver driver, String deviceType) {
+        driver.manage().window().maximize();
+
         if ("desktop".equalsIgnoreCase(deviceType)) {
             driver.manage().window().setSize(new Dimension(1920, 1080));
         } else if ("tablet".equalsIgnoreCase(deviceType)) {

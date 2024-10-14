@@ -1,8 +1,10 @@
 package pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.testng.asserts.SoftAssert;
 import utils.FormData;
@@ -17,6 +19,7 @@ public class Subscription {
     public Subscription(WebDriver _driver){
         driver = _driver;
     }
+
     private static final FormData formData = new FormData();
     //TODO: Create separate locator file
 
@@ -64,7 +67,12 @@ public class Subscription {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.findElement(By.xpath(closeCookie)).click();
         driver.findElement(By.cssSelector(emailBtnCss)).click();
+
         WebElement scroll = driver.findElement(By.id(scrollToEmailId));
+        // Firefox-specific scroll to make sure the element is visible
+        if (driver instanceof FirefoxDriver) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", scroll);
+        }
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         new Actions(driver).scrollToElement(scroll).perform();
     }
@@ -76,7 +84,7 @@ public class Subscription {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
     }
 
-    public void printFieldAll(){
+    public void printFieldAll() throws InterruptedException {
         driver.findElement(By.name(fullName)).sendKeys(formData.firstName + " " + formData.lastName);
         driver.findElement(By.name(reserveName)).sendKeys(formData.firstName + " " + formData.lastName);
         driver.findElement(By.name(emailNameP)).sendKeys(formData.email);
@@ -88,8 +96,15 @@ public class Subscription {
         driver.findElement(By.name(townName)).sendKeys(formData.town);
         driver.findElement(By.name(blockNumberName)).sendKeys(formData.blockNumber);
         driver.findElement(By.name(buildingName)).sendKeys(formData.buildingName);
-        WebElement scroll = driver.findElement(By.xpath(genderXpath));
+        WebElement scroll = driver.findElement(By.name(buildingName));
+
+        // Firefox-specific scroll to make sure the element is visible
+        if (driver instanceof FirefoxDriver) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", scroll);
+        }
+
         new Actions(driver).scrollToElement(scroll).perform();
+        Thread.sleep(1000);
         driver.findElement(By.xpath(genderXpath)).click();
         driver.findElement(By.name(homePhoneName)).sendKeys(formData.homePhone);
         driver.findElement(By.name(officePhoneName)).sendKeys(formData.officePhone);
@@ -123,12 +138,25 @@ public class Subscription {
     public void validateDataPrint(){
         String expectedStatus = "There was an error trying to send your message. Please try again later.";
         String actualStatus = driver.findElement(By.xpath(successStatusP)).getText();
-        softAssert.assertEquals(actualStatus,expectedStatus);
+        try {
+            softAssert.assertEquals(actualStatus,expectedStatus);
+            System.out.println("Test Passed: Print subscription form validated successfully.");
+        } catch (AssertionError e){
+            System.out.println("Test Failed: Print subscription form validated failed.");
+            throw e;
+        }
     }
 
     public void validateDataEmail(){
         String expectedStatus = "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.";
         String actualStatus = driver.findElement(By.xpath(successStatus)).getText();
-        softAssert.assertEquals(actualStatus,expectedStatus);
+        try {
+            softAssert.assertEquals(actualStatus,expectedStatus);
+            System.out.println("Test Passed: Email subscription form validated successfully.");
+        } catch (AssertionError e){
+            System.out.println("Test Failed: Email subscription form validation failed.");
+            throw e;
+        }
+        softAssert.assertAll();
     }
 }

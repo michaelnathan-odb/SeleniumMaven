@@ -18,7 +18,10 @@ public class PrintedSubscriptionTest {
                 {"chrome", "https://odb.org/subscription/jp/", "desktop"},
                 {"edge", "https://odb.org/subscription/jp/", "mobile"},
                 {"edge", "https://odb.org/subscription/jp/", "tablet"},
-                {"edge", "https://odb.org/subscription/jp/", "desktop"}
+                {"edge", "https://odb.org/subscription/jp/", "desktop"},
+                {"firefox", "https://odb.org/subscription/jp/", "mobile"},
+                {"firefox", "https://odb.org/subscription/jp/", "tablet"},
+                {"firefox", "https://odb.org/subscription/jp/", "desktop"}
         };
     }
 
@@ -41,17 +44,19 @@ public class PrintedSubscriptionTest {
         driver = BrowserConfig.getDriver(browser);
         ScreenSizeConfig.setScreenSize(driver, resolution);
         driver.get(site);
+        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
 
         Thread.sleep(3000);
         Subscription subscription = new Subscription(driver);
         subscription.clickPrintSubs();
         subscription.printFieldAll();
         subscription.submitFormPrint();
-        Thread.sleep(5000);
+        Thread.sleep(8000);
         subscription.validateDataPrint();
+
     }
 
-    @AfterTest
+    @AfterMethod
     public static void tearDown(){
         driver.quit();
     }
