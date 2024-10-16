@@ -1,0 +1,168 @@
+{
+  "testData": [
+    {
+      "site": "https://odb.org/subscription/jp/",
+      "testCases": [
+        {
+          "browser": "chrome",
+          "resolution": "mobile"
+        },
+        {
+          "browser": "chrome",
+          "resolution": "tablet"
+        },
+        {
+          "browser": "chrome",
+          "resolution": "desktop"
+        },
+        {
+          "browser": "edge",
+          "resolution": "mobile"
+        },
+        {
+          "browser": "edge",
+          "resolution": "tablet"
+        },
+        {
+          "browser": "edge",
+          "resolution": "desktop"
+        },
+        {
+          "browser": "firefox",
+          "resolution": "mobile"
+        },
+        {
+          "browser": "firefox",
+          "resolution": "tablet"
+        },
+        {
+          "browser": "firefox",
+          "resolution": "desktop"
+        }
+      ]
+    },
+    {
+      "site": "https://odb.org/subscription/id/",
+      "testCases": [
+        {
+          "browser": "chrome",
+          "resolution": "mobile"
+        },
+        {
+          "browser": "chrome",
+          "resolution": "tablet"
+        },
+        {
+          "browser": "chrome",
+          "resolution": "desktop"
+        },
+        {
+          "browser": "edge",
+          "resolution": "mobile"
+        },
+        {
+          "browser": "edge",
+          "resolution": "tablet"
+        },
+        {
+          "browser": "edge",
+          "resolution": "desktop"
+        },
+        {
+          "browser": "firefox",
+          "resolution": "mobile"
+        },
+        {
+          "browser": "firefox",
+          "resolution": "tablet"
+        },
+        {
+          "browser": "firefox",
+          "resolution": "desktop"
+        }
+      ]
+    },
+    {
+      "site": "https://traditional-odb.org/subscription/id/",
+      "testCases": [
+        {
+          "browser": "chrome",
+          "resolution": "mobile"
+        },
+        {
+          "browser": "chrome",
+          "resolution": "tablet"
+        },
+        {
+          "browser": "chrome",
+          "resolution": "desktop"
+        },
+        {
+          "browser": "edge",
+          "resolution": "mobile"
+        },
+        {
+          "browser": "edge",
+          "resolution": "tablet"
+        },
+        {
+          "browser": "edge",
+          "resolution": "desktop"
+        },
+        {
+          "browser": "firefox",
+          "resolution": "mobile"
+        },
+        {
+          "browser": "firefox",
+          "resolution": "tablet"
+        },
+        {
+          "browser": "firefox",
+          "resolution": "desktop"
+        }
+      ]
+    },
+    {
+      "site": "https://traditional-odb.org/subscription/my/",
+      "testCases": [
+        {
+          "browser": "chrome",
+          "resolution": "mobile"
+        },
+        {
+          "browser": "chrome",
+          "resolution": "tablet"
+        },
+        {
+          "browser": "chrome",
+          "resolution": "desktop"
+        },
+        {
+          "browser": "edge",
+          "resolution": "mobile"
+        },
+        {
+          "browser": "edge",
+          "resolution": "tablet"
+        },
+        {
+          "browser": "edge",
+          "resolution": "desktop"
+        },
+        {
+          "browser": "firefox",
+          "resolution": "mobile"
+        },
+        {
+          "browser": "firefox",
+          "resolution": "tablet"
+        },
+        {
+          "browser": "firefox",
+          "resolution": "desktop"
+        }
+      ]
+    }
+  ]
+}

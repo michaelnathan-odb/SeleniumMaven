@@ -1,4 +1,4 @@
-package utils;
+package userInfo;
 
 
 public class FormData {

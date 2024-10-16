@@ -53,7 +53,6 @@ public class PrintedSubscriptionTest {
         subscription.submitFormPrint();
         Thread.sleep(8000);
         subscription.validateDataPrint();
-
     }
 
     @AfterMethod

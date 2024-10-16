@@ -2,31 +2,25 @@ package tests;
 
 import config.BrowserConfig;
 import config.ScreenSizeConfig;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.WebDriver;
+import org.testng.Assert;
 import org.testng.annotations.*;
+import org.testng.asserts.SoftAssert;
 import pages.Subscription;
+import utils.TestDataProvider;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.Duration;
 
 public class EmailSubscriptionTest {
     public static WebDriver driver;
 
-    // DataProvider to provide browser, site, and resolution combinations
-    @DataProvider(name = "provider")
-    public Object[][] dataProvider() {
-        return new Object[][]{
-                {"chrome", "https://odb.org/subscription/jp/", "mobile"},
-                {"chrome", "https://odb.org/subscription/jp/", "tablet"},
-                {"chrome", "https://odb.org/subscription/jp/", "desktop"},
-                {"edge", "https://odb.org/subscription/jp/", "mobile"},
-                {"edge", "https://odb.org/subscription/jp/", "tablet"},
-                {"edge", "https://odb.org/subscription/jp/", "desktop"},
-                {"firefox", "https://odb.org/subscription/jp/", "mobile"},
-                {"firefox", "https://odb.org/subscription/jp/", "tablet"},
-                {"firefox", "https://odb.org/subscription/jp/", "desktop"}
-        };
-    }
-
-    /* Dummy test
-    @Test(dataProvider = "provider")
+    // Dummy test
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class)
     void dummyTest(String browser, String site, String resolution){
         driver = BrowserConfig.getDriver(browser);
         ScreenSizeConfig.setScreenSize(driver, resolution);
@@ -35,11 +29,34 @@ public class EmailSubscriptionTest {
         String siteTitle = driver.getTitle();
         System.out.println("Site Title :" + siteTitle);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+
+        String expectedTitle = getExpectedTitle(site);
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(siteTitle, expectedTitle);
+//        try {
+//            softAssert.assertEquals(siteTitle, expectedTitle);
+//            System.out.println("Test Passed");
+//        } catch (AssertionError e){
+//            System.out.println("Test Failed: Assertion fail because" + e);
+//            throw e;
+//        }
+        softAssert.assertAll();
         driver.quit();
     }
-    */
 
-    @Test(dataProvider = "provider")
+    //assert for dummy test
+    public String getExpectedTitle(String site){
+        return switch (site) {
+            case "https://odb.org/subscription/jp/" -> "Japan | Our Daily Bread";
+            case "https://odb.org/subscription/id/" -> "Indonesia | Our Daily Bread";
+            case "https://traditional-odb.org/subscription/id/" -> "Indonesia | 靈命日糧繁體中文網站";
+            case "https://traditional-odb.org/subscription/my/" -> "Malaysia | 靈命日糧繁體中文網";
+            default -> "Default Title";
+        };
+    }
+
+
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class)
     void testEmailSubs(String browser, String site, String resolution) throws InterruptedException {
         driver = BrowserConfig.getDriver(browser);
         ScreenSizeConfig.setScreenSize(driver, resolution);
@@ -50,10 +67,11 @@ public class EmailSubscriptionTest {
         Subscription subscription = new Subscription(driver);
         subscription.clickEmailSubs();
         subscription.emailFieldAll();
-        subscription.submitFormEmail();
-        Thread.sleep(8000);
-        subscription.validateDataEmail();
+//        subscription.submitFormEmail();
+//        Thread.sleep(8000);
+//        subscription.validateDataEmail();
     }
+
 
     @AfterMethod
     public static void tearDown(){

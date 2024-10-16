@@ -7,7 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.testng.asserts.SoftAssert;
-import utils.FormData;
+import userInfo.FormData;
 
 import java.time.Duration;
 
@@ -35,6 +35,9 @@ public class Subscription {
     public static String checkboxName = "list[]";
     public static String submitBtnXpath = "//*[@id=\"subscribe-form-email\"]/div/button[2]";
     public static String successStatus = "/html/body/div[2]/div[2]/div[3]/div[2]/div/div/form/div";
+    public static String successStatusClass = "";
+    //<form method="post" class="form-validate" action="https://traditional-odb.org/wp-admin/admin-post.php" id="subscribe-form-email"><div class="response text-center alert alert-success">成功！你將於24-48小時內收到確認郵件。</div></form>
+    //<div class="wpcf7-response-output alert" style="display: block;">Thank you for your message. It has been sent.</div>
 
     //printed subscription form locator
     public static String printBtnCss = "li.print.subscription-tabs";
@@ -65,9 +68,12 @@ public class Subscription {
 
     public void clickEmailSubs(){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        driver.findElement(By.xpath(closeCookie)).click();
-        driver.findElement(By.cssSelector(emailBtnCss)).click();
 
+        if (!driver.findElements(By.xpath(closeCookie)).isEmpty()){
+            driver.findElement(By.xpath(closeCookie)).click();
+        }
+
+        driver.findElement(By.cssSelector(emailBtnCss)).click();
         WebElement scroll = driver.findElement(By.id(scrollToEmailId));
         // Firefox-specific scroll to make sure the element is visible
         if (driver instanceof FirefoxDriver) {
@@ -136,7 +142,7 @@ public class Subscription {
     }
 
     public void validateDataPrint(){
-        String expectedStatus = "There was an error trying to send your message. Please try again later.";
+        String expectedStatus = "There was an error trying to send your message. Please try again later."; //change the success message
         String actualStatus = driver.findElement(By.xpath(successStatusP)).getText();
         try {
             softAssert.assertEquals(actualStatus,expectedStatus);
@@ -145,18 +151,24 @@ public class Subscription {
             System.out.println("Test Failed: Print subscription form validated failed.");
             throw e;
         }
+        softAssert.assertAll();
     }
 
     public void validateDataEmail(){
         String expectedStatus = "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.";
         String actualStatus = driver.findElement(By.xpath(successStatus)).getText();
-        try {
-            softAssert.assertEquals(actualStatus,expectedStatus);
-            System.out.println("Test Passed: Email subscription form validated successfully.");
-        } catch (AssertionError e){
-            System.out.println("Test Failed: Email subscription form validation failed.");
-            throw e;
-        }
+        softAssert.assertEquals(actualStatus,expectedStatus);
         softAssert.assertAll();
+    }
+
+    //assert for dummy test
+    public String getExpectedString(String site){
+        return switch (site) {
+            case "https://odb.org/subscription/jp/" -> "Japan | Our Daily Bread";
+            case "https://odb.org/subscription/id/" -> "Indonesia | Our Daily Bread";
+            case "https://traditional-odb.org/subscription/id/" -> "Indonesia | 靈命日糧繁體中文網站";
+            case "https://traditional-odb.org/subscription/my/" -> "Malaysia | 靈命日糧繁體中文網站";
+            default -> "Default Title";
+        };
     }
 }
