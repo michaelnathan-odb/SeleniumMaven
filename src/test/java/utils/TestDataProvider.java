@@ -27,7 +27,10 @@ public class TestDataProvider {
         // Loop through each site
         for (int i = 0; i < testDataArray.size(); i++) {
             JsonObject siteData = testDataArray.get(i).getAsJsonObject();
+            JsonObject expectedData = testDataArray.get(i).getAsJsonObject();
             String site = siteData.get("site").getAsString();
+            String  expectedResultMail = expectedData.get("expectedResultEmail").getAsString();
+            String  expectedResultPrint = expectedData.get("expectedResultPrint").getAsString();
             JsonArray testCases = siteData.getAsJsonArray("testCases");
 
             // Loop through the test cases for each site
@@ -37,7 +40,7 @@ public class TestDataProvider {
                 String resolution = testCase.get("resolution").getAsString();
 
                 // Add each combination of site, browser, and resolution to the data list
-                data.add(new Object[]{browser, site, resolution});
+                data.add(new Object[]{expectedResultMail, browser, site, resolution});
             }
         }
 

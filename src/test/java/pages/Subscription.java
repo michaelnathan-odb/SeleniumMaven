@@ -144,31 +144,23 @@ public class Subscription {
     public void validateDataPrint(){
         String expectedStatus = "There was an error trying to send your message. Please try again later."; //change the success message
         String actualStatus = driver.findElement(By.xpath(successStatusP)).getText();
-        try {
-            softAssert.assertEquals(actualStatus,expectedStatus);
-            System.out.println("Test Passed: Print subscription form validated successfully.");
-        } catch (AssertionError e){
-            System.out.println("Test Failed: Print subscription form validated failed.");
-            throw e;
-        }
-        softAssert.assertAll();
-    }
-
-    public void validateDataEmail(){
-        String expectedStatus = "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.";
-        String actualStatus = driver.findElement(By.xpath(successStatus)).getText();
         softAssert.assertEquals(actualStatus,expectedStatus);
         softAssert.assertAll();
     }
 
     //assert for dummy test
-    public String getExpectedString(String site){
+    public String getExpectedResult(String site){
         return switch (site) {
-            case "https://odb.org/subscription/jp/" -> "Japan | Our Daily Bread";
-            case "https://odb.org/subscription/id/" -> "Indonesia | Our Daily Bread";
-            case "https://traditional-odb.org/subscription/id/" -> "Indonesia | 靈命日糧繁體中文網站";
-            case "https://traditional-odb.org/subscription/my/" -> "Malaysia | 靈命日糧繁體中文網站";
+            case "https://odb.org/subscription/jp/", "https://odb.org/subscription/id/" -> "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.";
+            case "https://traditional-odb.org/subscription/id/", "https://traditional-odb.org/subscription/my/" -> "成功！你將於24-48小時內收到確認郵件。";
             default -> "Default Title";
         };
+    }
+
+    public void validateDataEmail(String site){
+        String expectedResult = getExpectedResult(site);
+        String actualStatus = driver.findElement(By.xpath(successStatus)).getText();
+        softAssert.assertEquals(actualStatus,expectedResult, "Response result doesn't met, test failed!");
+        softAssert.assertAll();
     }
 }
