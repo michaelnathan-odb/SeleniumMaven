@@ -15,7 +15,7 @@ public class TestDataProvider {
     @DataProvider(name = "provider")
     public Object[][] dataProvider() throws IOException {
         // Parse the JSON file
-        FileReader reader = new FileReader("src/main/resources/testData2.json");
+        FileReader reader = new FileReader("src/main/resources/testData.json");
         JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
 
         // Get the testData array from JSON
@@ -40,7 +40,7 @@ public class TestDataProvider {
                 String resolution = testCase.get("resolution").getAsString();
 
                 // Add each combination of site, browser, and resolution to the data list
-                data.add(new Object[]{expectedResultMail, browser, site, resolution});
+                data.add(new Object[]{browser, site, resolution, expectedResultMail});
             }
         }
 

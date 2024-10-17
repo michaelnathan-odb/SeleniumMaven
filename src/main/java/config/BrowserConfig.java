@@ -18,7 +18,7 @@ public class BrowserConfig {
             driver = new ChromeDriver(options);
         } else if ("firefox".equalsIgnoreCase(browser)) {
             FirefoxOptions options = new FirefoxOptions();
-            options.setBinary("C:/Program Files (x86)/Mozilla Firefox/firefox.exe").addArguments("--headless");
+            options.setBinary("C:/Program Files/Mozilla Firefox/firefox.exe").addArguments("--headless");
             System.setProperty("webdriver.gecko.driver", "src/main/resources/driver/geckodriver.exe");
             driver = new FirefoxDriver(options);
         } else if ("edge".equalsIgnoreCase(browser)) {

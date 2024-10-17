@@ -1,17 +1,51 @@
 package tests;
 
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import config.BrowserConfig;
 import config.ScreenSizeConfig;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.*;
+import org.testng.asserts.SoftAssert;
 import pages.Subscription;
 import utils.TestDataProvider;
+
+import java.time.Duration;
 
 public class EmailSubscriptionTest {
     public static WebDriver driver;
 
+    //report
+    static ExtentTest test;
+    static ExtentReports extent = new ExtentReports();
+
+    // Dummy test
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class)
-    void testEmailSubs(String browser, String site, String resolution) throws InterruptedException {
+    void dummyTest(String browser, String site, String resolution, String expectedResult){
+        ExtentSparkReporter spark = new ExtentSparkReporter("target/Spark.html");
+        extent.attachReporter(spark);
+        driver = BrowserConfig.getDriver(browser);
+        ScreenSizeConfig.setScreenSize(driver, resolution);
+        driver.get(site);
+
+        test = extent.createTest("Dummy Test", "This test are to get the sites title, running on " + browser + ", " + resolution + ", at " + site);
+
+        String siteTitle = driver.getTitle();
+        System.out.println("Site Title: " + siteTitle);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        if (siteTitle != null){
+            test.log(Status.PASS,"The site title are " + siteTitle);
+        } else {
+            test.log(Status.FAIL, "The site title doesn't exist");
+        }
+        extent.flush();
+        driver.quit();
+    }
+
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class)
+    void testEmailSubs(String browser, String site, String resolution, String expectedResultEmail) throws InterruptedException {
         driver = BrowserConfig.getDriver(browser);
         ScreenSizeConfig.setScreenSize(driver, resolution);
         driver.get(site);
@@ -23,7 +57,7 @@ public class EmailSubscriptionTest {
         subscription.emailFieldAll();
         subscription.submitFormEmail();
         Thread.sleep(8000);
-        subscription.validateDataEmail(site);
+        subscription.validateDataEmail(expectedResultEmail);
     }
 
     @AfterMethod

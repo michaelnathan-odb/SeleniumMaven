@@ -34,10 +34,8 @@ public class Subscription {
     public static String dropdownXpath = "/html[1]/body[1]/div[2]/div[2]/div[3]/div[2]/div[1]/div[1]/form[1]/div[1]/div[3]/select[1]";
     public static String checkboxName = "list[]";
     public static String submitBtnXpath = "//*[@id=\"subscribe-form-email\"]/div/button[2]";
-    public static String successStatus = "/html/body/div[2]/div[2]/div[3]/div[2]/div/div/form/div";
-    public static String successStatusClass = "";
+    public static String successStatusClass = "div.response.text-center.alert.alert-success";
     //<form method="post" class="form-validate" action="https://traditional-odb.org/wp-admin/admin-post.php" id="subscribe-form-email"><div class="response text-center alert alert-success">成功！你將於24-48小時內收到確認郵件。</div></form>
-    //<div class="wpcf7-response-output alert" style="display: block;">Thank you for your message. It has been sent.</div>
 
     //printed subscription form locator
     public static String printBtnCss = "li.print.subscription-tabs";
@@ -63,8 +61,8 @@ public class Subscription {
     public static String yearName = "Year";
     public static String messageName = "Message";
     public static String submitBtnXpathP = "/html/body/div[2]/div[2]/div[3]/div[1]/div/div/form/div[20]/div/input";
-    public static String successStatusP = "//div[@class='wpcf7-response-output alert']";
-
+    public static String successStatusP = "div.wpcf7-response-output.alert";
+    //<div class="wpcf7-response-output alert" style="display: block;">Thank you for your message. It has been sent.</div>
 
     public void clickEmailSubs(){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
@@ -141,26 +139,15 @@ public class Subscription {
         driver.findElement(By.xpath(submitBtnXpath)).click();
     }
 
-    public void validateDataPrint(){
-        String expectedStatus = "There was an error trying to send your message. Please try again later."; //change the success message
+    public void validateDataPrint(String expectedResultPrint){
         String actualStatus = driver.findElement(By.xpath(successStatusP)).getText();
-        softAssert.assertEquals(actualStatus,expectedStatus);
+        softAssert.assertEquals(actualStatus,expectedResultPrint, "Response result doesn't met, test failed!");
         softAssert.assertAll();
     }
 
-    //assert for dummy test
-    public String getExpectedResult(String site){
-        return switch (site) {
-            case "https://odb.org/subscription/jp/", "https://odb.org/subscription/id/" -> "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.";
-            case "https://traditional-odb.org/subscription/id/", "https://traditional-odb.org/subscription/my/" -> "成功！你將於24-48小時內收到確認郵件。";
-            default -> "Default Title";
-        };
-    }
-
-    public void validateDataEmail(String site){
-        String expectedResult = getExpectedResult(site);
-        String actualStatus = driver.findElement(By.xpath(successStatus)).getText();
-        softAssert.assertEquals(actualStatus,expectedResult, "Response result doesn't met, test failed!");
+    public void validateDataEmail(String expectedResultEmail){
+        String actualStatus = driver.findElement(By.cssSelector(successStatusClass)).getText();
+        softAssert.assertEquals(actualStatus,expectedResultEmail, "Response result doesn't met, test failed!");
         softAssert.assertAll();
     }
 }
