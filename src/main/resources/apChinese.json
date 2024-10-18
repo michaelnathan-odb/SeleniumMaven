@@ -1,9 +1,9 @@
 {
   "testData": [
     {
-      "site": "https://odb.org/subscription/au/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
+      "site": "https://traditional-odb.org/subscription/au/",
+      "expectedResultEmail": "成功！你將於24-48小時內收到確認郵件。",
+      "expectedResultPrint": "您的信件已成功寄出，感謝。",
       "testCases": [
         {
           "browser": "chrome",
@@ -44,9 +44,9 @@
       ]
     },
     {
-      "site": "https://odb.org/subscription/barbados/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
+      "site": "https://traditional-odb.org/subscription/canada/",
+      "expectedResultEmail": "成功！你將於24-48小時內收到確認郵件。",
+      "expectedResultPrint": "您的信件已成功寄出，感謝。",
       "testCases": [
         {
           "browser": "chrome",
@@ -87,9 +87,9 @@
       ]
     },
     {
-      "site": "https://odb.org/subscription/guyana/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
+      "site": "https://traditional-odb.org/subscription/hk/",
+      "expectedResultEmail": "成功！你將於24-48小時內收到確認郵件。",
+      "expectedResultPrint": "您的信件已成功寄出，感謝。",
       "testCases": [
         {
           "browser": "chrome",
@@ -130,9 +130,9 @@
       ]
     },
     {
-      "site": "https://odb.org/subscription/hongkong/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
+      "site": "https://traditional-odb.org/subscription/id/",
+      "expectedResultEmail": "成功！你將於24-48小時內收到確認郵件。",
+      "expectedResultPrint": "您的信件已成功寄出，感謝。",
       "testCases": [
         {
           "browser": "chrome",
@@ -173,9 +173,9 @@
       ]
     },
     {
-      "site": "https://odb.org/subscription/india/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
+      "site": "https://traditional-odb.org/subscription/my/",
+      "expectedResultEmail": "成功！你將於24-48小時內收到確認郵件。",
+      "expectedResultPrint": "您的信件已成功寄出，感謝。",
       "testCases": [
         {
           "browser": "chrome",
@@ -216,9 +216,9 @@
       ]
     },
     {
-      "site": "https://odb.org/subscription/id/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
+      "site": "https://traditional-odb.org/subscription/nz/",
+      "expectedResultEmail": "成功！你將於24-48小時內收到確認郵件。",
+      "expectedResultPrint": "您的信件已成功寄出，感謝。",
       "testCases": [
         {
           "browser": "chrome",
@@ -259,9 +259,9 @@
       ]
     },
     {
-      "site": "https://odb.org/subscription/jamaica/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
+      "site": "https://traditional-odb.org/subscription/tw/",
+      "expectedResultEmail": "成功！你將於24-48小時內收到確認郵件。",
+      "expectedResultPrint": "您的信件已成功寄出，感謝。",
       "testCases": [
         {
           "browser": "chrome",
@@ -302,9 +302,9 @@
       ]
     },
     {
-      "site": "https://odb.org/subscription/jp/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
+      "site": "https://traditional-odb.org/subscription/united-states/",
+      "expectedResultEmail": "成功！你將於24-48小時內收到確認郵件。",
+      "expectedResultPrint": "您的信件已成功寄出，感謝。",
       "testCases": [
         {
           "browser": "chrome",
@@ -345,9 +345,9 @@
       ]
     },
     {
-      "site": "https://odb.org/subscription/malaysia/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
+      "site": "https://simplified-odb.org/subscription/au/",
+      "expectedResultEmail": "成功！你将于24-48小时内收到确认电邮。",
+      "expectedResultPrint": "谢谢。已发送您的信息。",
       "testCases": [
         {
           "browser": "chrome",
@@ -388,9 +388,9 @@
       ]
     },
     {
-      "site": "https://odb.org/subscription/myanmar/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
+      "site": "https://simplified-odb.org/subscription/canada/",
+      "expectedResultEmail": "成功！你将于24-48小时内收到确认电邮。",
+      "expectedResultPrint": "您的信件已成功寄出，感謝。",
       "testCases": [
         {
           "browser": "chrome",
@@ -431,9 +431,9 @@
       ]
     },
     {
-      "site": "https://odb.org/subscription/nz/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
+      "site": "https://simplified-odb.org/subscription/hk/",
+      "expectedResultEmail": "成功！你将于24-48小时内收到确认电邮。",
+      "expectedResultPrint": "谢谢。已发送您的信息。",
       "testCases": [
         {
           "browser": "chrome",
@@ -474,9 +474,9 @@
       ]
     },
     {
-      "site": "https://odb.org/subscription/philippines/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
+      "site": "https://simplified-odb.org/subscription/id/",
+      "expectedResultEmail": "成功！你将于24-48小时内收到确认电邮。",
+      "expectedResultPrint": "谢谢。已发送您的信息。",
       "testCases": [
         {
           "browser": "chrome",
@@ -517,9 +517,9 @@
       ]
     },
     {
-      "site": "https://odb.org/subscription/singapore/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
+      "site": "https://simplified-odb.org/subscription/my/",
+      "expectedResultEmail": "成功！你将于24-48小时内收到确认电邮。",
+      "expectedResultPrint": "谢谢。已发送您的信息。",
       "testCases": [
         {
           "browser": "chrome",
@@ -560,9 +560,9 @@
       ]
     },
     {
-      "site": "https://odb.org/subscription/lk/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
+      "site": "https://simplified-odb.org/subscription/sg/",
+      "expectedResultEmail": "成功！你将于24-48小时内收到确认电邮。",
+      "expectedResultPrint": "谢谢。已发送您的信息。",
       "testCases": [
         {
           "browser": "chrome",
@@ -603,9 +603,9 @@
       ]
     },
     {
-      "site": "https://odb.org/subscription/uk/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
+      "site": "https://simplified-odb.org/subscription/tw/",
+      "expectedResultEmail": "成功！你将于24-48小时内收到确认电邮。",
+      "expectedResultPrint": "谢谢。已发送您的信息。",
       "testCases": [
         {
           "browser": "chrome",
@@ -646,181 +646,9 @@
       ]
     },
     {
-      "site": "https://odb.org/subscription/eu/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
-      "testCases": [
-        {
-          "browser": "chrome",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "chrome",
-          "resolution": "tablet"
-        },
-        {
-          "browser": "chrome",
-          "resolution": "desktop"
-        },
-        {
-          "browser": "edge",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "edge",
-          "resolution": "tablet"
-        },
-        {
-          "browser": "edge",
-          "resolution": "desktop"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "tablet"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "desktop"
-        }
-      ]
-    },
-    {
-      "site": "https://odb.org/subscription/ireland/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
-      "testCases": [
-        {
-          "browser": "chrome",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "chrome",
-          "resolution": "tablet"
-        },
-        {
-          "browser": "chrome",
-          "resolution": "desktop"
-        },
-        {
-          "browser": "edge",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "edge",
-          "resolution": "tablet"
-        },
-        {
-          "browser": "edge",
-          "resolution": "desktop"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "tablet"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "desktop"
-        }
-      ]
-    },
-    {
-      "site": "https://odb.org/subscription/tw/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
-      "testCases": [
-        {
-          "browser": "chrome",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "chrome",
-          "resolution": "tablet"
-        },
-        {
-          "browser": "chrome",
-          "resolution": "desktop"
-        },
-        {
-          "browser": "edge",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "edge",
-          "resolution": "tablet"
-        },
-        {
-          "browser": "edge",
-          "resolution": "desktop"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "tablet"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "desktop"
-        }
-      ]
-    },
-    {
-      "site": "https://odb.org/subscription/trinidad-tobago/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
-      "testCases": [
-        {
-          "browser": "chrome",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "chrome",
-          "resolution": "tablet"
-        },
-        {
-          "browser": "chrome",
-          "resolution": "desktop"
-        },
-        {
-          "browser": "edge",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "edge",
-          "resolution": "tablet"
-        },
-        {
-          "browser": "edge",
-          "resolution": "desktop"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "tablet"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "desktop"
-        }
-      ]
-    },
-    {
-      "site": "https://odb.org/subscription/united-states/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
+      "site": "https://simplified-odb.org/subscription/united-states/",
+      "expectedResultEmail": "成功！你将于24-48小时内收到确认电邮。",
+      "expectedResultPrint": "谢谢。已发送您的信息。",
       "testCases": [
         {
           "browser": "chrome",

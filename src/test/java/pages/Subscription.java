@@ -21,21 +21,18 @@ public class Subscription {
     }
 
     private static final FormData formData = new FormData();
-    //TODO: Create separate locator file
 
     //email subscription form locator
-//    public static String emailBtnXpath = "//*[@id=\"row-subscription-items\"]/ul/li[2]";
     public static String emailBtnCss = "li.email.subscription-tabs";
-    public static String closeCookie = "//*[@id=\"moove_gdpr_cookie_info_bar\"]/div/div/div[2]/button[3]/i";
+    public static String closeCookie = "button.moove-gdpr-infobar-close-btn.gdpr-fbo-3";
     public static String scrollToEmailId = "subscription-email-signup";
     public static String emailName = "email";
     public static String firstName = "First Name";
     public static String lastName = "Last Name";
-    public static String dropdownXpath = "/html[1]/body[1]/div[2]/div[2]/div[3]/div[2]/div[1]/div[1]/form[1]/div[1]/div[3]/select[1]";
+    public static String dropdownCss = "select.form-control.select-required";
     public static String checkboxName = "list[]";
-    public static String submitBtnXpath = "//*[@id=\"subscribe-form-email\"]/div/button[2]";
+    public static String submitBtnCss = "button.validation-btn";
     public static String successStatusClass = "div.response.text-center.alert.alert-success";
-    //<form method="post" class="form-validate" action="https://traditional-odb.org/wp-admin/admin-post.php" id="subscribe-form-email"><div class="response text-center alert alert-success">成功！你將於24-48小時內收到確認郵件。</div></form>
 
     //printed subscription form locator
     public static String printBtnCss = "li.print.subscription-tabs";
@@ -67,8 +64,8 @@ public class Subscription {
     public void clickEmailSubs(){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
-        if (!driver.findElements(By.xpath(closeCookie)).isEmpty()){
-            driver.findElement(By.xpath(closeCookie)).click();
+        if (!driver.findElements(By.cssSelector(closeCookie)).isEmpty()){
+            driver.findElement(By.cssSelector(closeCookie)).click();
         }
 
         driver.findElement(By.cssSelector(emailBtnCss)).click();
@@ -127,7 +124,7 @@ public class Subscription {
         driver.findElement(By.name(emailName)).sendKeys(formData.email);
         driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
         driver.findElement(By.name(lastName)).sendKeys(formData.lastName);
-        driver.findElement(By.xpath(dropdownXpath)).sendKeys(formData.country);
+        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
         driver.findElement(By.name(checkboxName)).click();
     }
 
@@ -136,11 +133,11 @@ public class Subscription {
     }
 
     public void submitFormEmail(){
-        driver.findElement(By.xpath(submitBtnXpath)).click();
+        driver.findElement(By.cssSelector(submitBtnCss)).click();
     }
 
     public void validateDataPrint(String expectedResultPrint){
-        String actualStatus = driver.findElement(By.xpath(successStatusP)).getText();
+        String actualStatus = driver.findElement(By.cssSelector(successStatusP)).getText();
         softAssert.assertEquals(actualStatus,expectedResultPrint, "Response result doesn't met, test failed!");
         softAssert.assertAll();
     }
