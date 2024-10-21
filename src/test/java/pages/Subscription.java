@@ -78,6 +78,79 @@ public class Subscription {
         new Actions(driver).scrollToElement(scroll).perform();
     }
 
+    //Successful subscription with valid input (groupA)
+    public void emailGreen01(){
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.findElement(By.name(emailName)).sendKeys(formData.email);
+        driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
+        driver.findElement(By.name(lastName)).sendKeys(formData.lastName);
+        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
+        driver.findElement(By.name(checkboxName)).click();
+    }
+
+    //Subscription with optional fields left blank (e.g., first name and last name) (groupB)
+    public void emailGreen02(){
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.findElement(By.name(emailName)).sendKeys(formData.email);
+        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
+        driver.findElement(By.name(checkboxName)).click();
+    }
+
+    //Subscription with a different country selection (groupC)
+    public void emailGreen03(){
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.findElement(By.name(emailName)).sendKeys(formData.email);
+        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country01);
+        driver.findElement(By.name(checkboxName)).click();
+    }
+
+    //Subscription with an invalid email format (groupE)
+    public void emailRed01(){
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.findElement(By.name(emailName)).sendKeys(formData.emailInvalid);
+        driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
+        driver.findElement(By.name(lastName)).sendKeys(formData.lastName);
+        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
+        driver.findElement(By.name(checkboxName)).click();
+    }
+
+    //Subscription without checking the agreement checkbox (groupF)
+    public void emailRed02(){
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.findElement(By.name(emailName)).sendKeys(formData.emailInvalid);
+        driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
+        driver.findElement(By.name(lastName)).sendKeys(formData.lastName);
+        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
+    }
+
+    //Submission with blank email (groupG)
+    public void emailRed03(){
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
+        driver.findElement(By.name(lastName)).sendKeys(formData.lastName);
+        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
+        driver.findElement(By.name(checkboxName)).click();
+    }
+
+    //Submission with an invalid country selection (groupI)
+    public void emailRed04(){
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.findElement(By.name(emailName)).sendKeys(formData.email);
+        driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
+        driver.findElement(By.name(lastName)).sendKeys(formData.lastName);
+        driver.findElement(By.name(checkboxName)).click();
+    }
+
+    //Subscription with extra long names or email (groupK)
+    public void emailRed05(){
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.findElement(By.name(emailName)).sendKeys(formData.emailDummy);
+        driver.findElement(By.name(firstName)).sendKeys(formData.firstNameDummy);
+        driver.findElement(By.name(lastName)).sendKeys(formData.lastNameDummy);
+        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
+        driver.findElement(By.name(checkboxName)).click();
+    }
+
     public void clickPrintSubs(){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.findElement(By.xpath(closeCookie)).click();
@@ -117,15 +190,6 @@ public class Subscription {
         driver.findElement(By.name(yearName)).sendKeys(formData.year);
         driver.findElement(By.name(messageName)).sendKeys(formData.message);
         new Actions(driver).scrollByAmount(0,400).perform();
-    }
-
-    public void emailFieldAll(){
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        driver.findElement(By.name(emailName)).sendKeys(formData.email);
-        driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
-        driver.findElement(By.name(lastName)).sendKeys(formData.lastName);
-        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
-        driver.findElement(By.name(checkboxName)).click();
     }
 
     public void submitFormPrint(){
