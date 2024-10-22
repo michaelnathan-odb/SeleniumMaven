@@ -15,7 +15,7 @@ public class BrowserConfig {
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--headless=old");
             System.setProperty("webdriver.chrome.driver", "src/main/resources/driver/chromedriver.exe");
-            driver = new ChromeDriver();
+            driver = new ChromeDriver(options);
         } else if ("firefox".equalsIgnoreCase(browser)) {
             FirefoxOptions options = new FirefoxOptions();
             options.setBinary("C:/Program Files/Mozilla Firefox/firefox.exe").addArguments("--headless");

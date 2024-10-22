@@ -10,6 +10,8 @@ import org.openqa.selenium.WebDriver;
 import org.testng.annotations.*;
 import pages.Subscription;
 import utils.TestDataProvider;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EmailSubscriptionTest {
     public static WebDriver driver;
@@ -17,9 +19,42 @@ public class EmailSubscriptionTest {
     //report
     static ExtentReports extent = new ExtentReports();
     static ExtentSparkReporter sparkReporter;
-    static ExtentTest siteTest;
-    static ExtentTest browserTest;
-    static ExtentTest resolutionTest;
+
+    private ExtentTest scenarioTest = null;
+    private final Map<String, ExtentTest> siteMap = new HashMap<>();
+    private final Map<String, ExtentTest> browserMap = new HashMap<>();
+    private final Map<String, ExtentTest> resolutionMap = new HashMap<>();
+
+    private void createTestNodes(String site, String browser, String resolution, String scenario){
+        ExtentTest siteTest;
+        if (siteMap.containsKey(site)) {
+            siteTest = siteMap.get(site);
+        } else {
+            siteTest = extent.createTest(site);
+            siteMap.put(site, siteTest); // Store site node in the map
+        }
+
+        ExtentTest browserTest;
+        String browserKey = site + "_" + browser;
+        if(browserMap.containsKey(browserKey)){
+            browserTest = browserMap.get(browserKey);
+        } else {
+            browserTest = siteTest.createNode("Browser: " + browser);
+            browserMap.put(browserKey, browserTest);
+        }
+
+        ExtentTest resolutionTest;
+        String resolutionKey = browserKey + "_" + resolution;
+        if(resolutionMap.containsKey(resolutionKey)){
+            resolutionTest = resolutionMap.get(resolutionKey);
+        } else {
+            resolutionTest = browserTest.createNode("Resolution: " + resolution);
+            resolutionMap.put(resolutionKey, resolutionTest);
+        }
+        scenarioTest = resolutionTest.createNode(scenario);
+
+        scenarioTest.log(Status.INFO, "Browser: " + browser + ", Resolution: " + resolution + ", Site: " + site + ", Scenario: " + scenario);
+    }
 
     @BeforeSuite
     public void setupSuite(){
@@ -31,15 +66,8 @@ public class EmailSubscriptionTest {
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
     void testEmailSubs01(String browser, String site, String resolution, String expectedResultEmail){
         try{
-            if (siteTest == null || !siteTest.getModel().getName().equals(site)){
-                siteTest = extent.createTest(site);
-            }
-            if (browserTest == null || !browserTest.getModel().getName().equals("Browser: " + browser)){
-                browserTest = siteTest.createNode("Browser: " + browser);
-            }
-            resolutionTest = browserTest.createNode( "Resolution: " + resolution);
-
-            resolutionTest.log(Status.INFO, "Browser: " + browser + ", Resolution: " + resolution + ", Site: " + site);
+            String scenarioName = "Scenario Test: Successful subscription with valid input";
+            createTestNodes(site, browser, resolution, scenarioName);
 
             driver = BrowserConfig.getDriver(browser);
             ScreenSizeConfig.setScreenSize(driver, resolution);
@@ -54,9 +82,9 @@ public class EmailSubscriptionTest {
             Thread.sleep(8000);
             subscription.validateDataEmail(expectedResultEmail);
 
-            resolutionTest.log(Status.PASS, "Test Succeed");
+            scenarioTest.log(Status.PASS, "Test Succeed");
         } catch (Exception e) {
-            resolutionTest.log(Status.FAIL, "Test failed because of " + e);
+            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
             e.printStackTrace();
         } finally {
             if (driver != null){
@@ -69,15 +97,8 @@ public class EmailSubscriptionTest {
     void testEmailSubs02(String browser, String site, String resolution, String expectedResultEmail){
         //scenario: User want to subscribe daily devotional by email
         try{
-            if (siteTest == null || !siteTest.getModel().getName().equals(site)){
-                siteTest = extent.createTest(site);
-            }
-            if (browserTest == null || !browserTest.getModel().getName().equals("Browser: " + browser)){
-                browserTest = siteTest.createNode("Browser: " + browser);
-            }
-            resolutionTest = browserTest.createNode( "Resolution: " + resolution);
-
-            resolutionTest.log(Status.INFO, "Browser: " + browser + ", Resolution: " + resolution + ", Site: " + site);
+            String scenarioName = "Scenario Test: Subscription with optional fields left blank (without first name and last name)";
+            createTestNodes(site, browser, resolution, scenarioName);
 
             //Given: Setting up the site, browser and screen resolution, navigated to subscription form
             driver = BrowserConfig.getDriver(browser);
@@ -100,9 +121,9 @@ public class EmailSubscriptionTest {
 
             //Then: Success validation message is showing
             subscription.validateDataEmail(expectedResultEmail);
-            resolutionTest.log(Status.PASS, "Test Succeed");
+            scenarioTest.log(Status.PASS, "Test Succeed");
         } catch (Exception e) {
-            resolutionTest.log(Status.FAIL, "Test failed because of " + e);
+            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
             e.printStackTrace();
         } finally {
             if (driver != null){
@@ -116,15 +137,8 @@ public class EmailSubscriptionTest {
     void testEmailSubs03(String browser, String site, String resolution, String expectedResultEmail){
         //scenario: User want to subscribe daily devotional by email
         try{
-            if (siteTest == null || !siteTest.getModel().getName().equals(site)){
-                siteTest = extent.createTest(site);
-            }
-            if (browserTest == null || !browserTest.getModel().getName().equals("Browser: " + browser)){
-                browserTest = siteTest.createNode("Browser: " + browser);
-            }
-            resolutionTest = browserTest.createNode( "Resolution: " + resolution);
-
-            resolutionTest.log(Status.INFO, "Browser: " + browser + ", Resolution: " + resolution + ", Site: " + site);
+            String scenarioName = "Scenario Test: Subscription with a different country selection";
+            createTestNodes(site, browser, resolution, scenarioName);
 
             //Given: Setting up the site, browser and screen resolution, navigated to subscription form
             driver = BrowserConfig.getDriver(browser);
@@ -147,9 +161,9 @@ public class EmailSubscriptionTest {
 
             //Then: Success validation message is showing
             subscription.validateDataEmail(expectedResultEmail);
-            resolutionTest.log(Status.PASS, "Test Succeed");
+            scenarioTest.log(Status.PASS, "Test Succeed");
         } catch (Exception e) {
-            resolutionTest.log(Status.FAIL, "Test failed because of " + e);
+            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
             e.printStackTrace();
         } finally {
             if (driver != null){
@@ -159,19 +173,12 @@ public class EmailSubscriptionTest {
         }
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupE")
-    void testEmailSubs05(String browser, String site, String resolution, String expectedResultEmail){
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupD")
+    void testEmailSubs04(String browser, String site, String resolution, String expectedResultEmail){
         //scenario: User want to subscribe daily devotional by email
         try{
-            if (siteTest == null || !siteTest.getModel().getName().equals(site)){
-                siteTest = extent.createTest(site);
-            }
-            if (browserTest == null || !browserTest.getModel().getName().equals("Browser: " + browser)){
-                browserTest = siteTest.createNode("Browser: " + browser);
-            }
-            resolutionTest = browserTest.createNode( "Resolution: " + resolution);
-
-            resolutionTest.log(Status.INFO, "Browser: " + browser + ", Resolution: " + resolution + ", Site: " + site);
+            String scenarioName = "Scenario Test: Subscription with an invalid email format";
+            createTestNodes(site, browser, resolution, scenarioName);
 
             //Given: Setting up the site, browser and screen resolution, navigated to subscription form
             driver = BrowserConfig.getDriver(browser);
@@ -194,9 +201,9 @@ public class EmailSubscriptionTest {
 
             //Then: Success validation message is showing
             subscription.validateDataEmail(expectedResultEmail);
-            resolutionTest.log(Status.PASS, "Test Succeed");
+            scenarioTest.log(Status.PASS, "Test Succeed");
         } catch (Exception e) {
-            resolutionTest.log(Status.FAIL, "Test failed because of " + e);
+            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
             e.printStackTrace();
         } finally {
             if (driver != null){
@@ -206,20 +213,12 @@ public class EmailSubscriptionTest {
         }
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupF")
-    void testEmailSubs06(String browser, String site, String resolution, String expectedResultEmail){
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupE")
+    void testEmailSubs05(String browser, String site, String resolution, String expectedResultEmail){
         //scenario: User want to subscribe daily devotional by email
         try{
-            if (siteTest == null || !siteTest.getModel().getName().equals(site)){
-                siteTest = extent.createTest(site);
-            }
-            if (browserTest == null || !browserTest.getModel().getName().equals("Browser: " + browser)){
-                browserTest = siteTest.createNode("Browser: " + browser);
-            }
-            resolutionTest = browserTest.createNode( "Resolution: " + resolution);
-
-            resolutionTest.log(Status.INFO, "Browser: " + browser + ", Resolution: " + resolution + ", Site: " + site);
-
+            String scenarioName = "Scenario Test: Subscription without checking the agreement checkbox";
+            createTestNodes(site, browser, resolution, scenarioName);
             //Given: Setting up the site, browser and screen resolution, navigated to subscription form
             driver = BrowserConfig.getDriver(browser);
             ScreenSizeConfig.setScreenSize(driver, resolution);
@@ -241,9 +240,9 @@ public class EmailSubscriptionTest {
 
             //Then: Success validation message is showing
             subscription.validateDataEmail(expectedResultEmail);
-            resolutionTest.log(Status.PASS, "Test Succeed");
+            scenarioTest.log(Status.PASS, "Test Succeed");
         } catch (Exception e) {
-            resolutionTest.log(Status.FAIL, "Test failed because of " + e);
+            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
             e.printStackTrace();
         } finally {
             if (driver != null){
@@ -253,20 +252,12 @@ public class EmailSubscriptionTest {
         }
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupG")
-    void testEmailSubs07(String browser, String site, String resolution, String expectedResultEmail){
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupF")
+    void testEmailSubs06(String browser, String site, String resolution, String expectedResultEmail){
         //scenario: User want to subscribe daily devotional by email
         try{
-            if (siteTest == null || !siteTest.getModel().getName().equals(site)){
-                siteTest = extent.createTest(site);
-            }
-            if (browserTest == null || !browserTest.getModel().getName().equals("Browser: " + browser)){
-                browserTest = siteTest.createNode("Browser: " + browser);
-            }
-            resolutionTest = browserTest.createNode( "Resolution: " + resolution);
-
-            resolutionTest.log(Status.INFO, "Browser: " + browser + ", Resolution: " + resolution + ", Site: " + site);
-
+            String scenarioName = "Scenario Test: Submission with blank email";
+            createTestNodes(site, browser, resolution, scenarioName);
             //Given: Setting up the site, browser and screen resolution, navigated to subscription form
             driver = BrowserConfig.getDriver(browser);
             ScreenSizeConfig.setScreenSize(driver, resolution);
@@ -288,9 +279,9 @@ public class EmailSubscriptionTest {
 
             //Then: Success validation message is showing
             subscription.validateDataEmail(expectedResultEmail);
-            resolutionTest.log(Status.PASS, "Test Succeed");
+            scenarioTest.log(Status.PASS, "Test Succeed");
         } catch (Exception e) {
-            resolutionTest.log(Status.FAIL, "Test failed because of " + e);
+            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
             e.printStackTrace();
         } finally {
             if (driver != null){
@@ -300,20 +291,12 @@ public class EmailSubscriptionTest {
         }
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupI")
-    void testEmailSubs08(String browser, String site, String resolution, String expectedResultEmail){
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupG")
+    void testEmailSubs07(String browser, String site, String resolution, String expectedResultEmail){
         //scenario: User want to subscribe daily devotional by email
         try{
-            if (siteTest == null || !siteTest.getModel().getName().equals(site)){
-                siteTest = extent.createTest(site);
-            }
-            if (browserTest == null || !browserTest.getModel().getName().equals("Browser: " + browser)){
-                browserTest = siteTest.createNode("Browser: " + browser);
-            }
-            resolutionTest = browserTest.createNode( "Resolution: " + resolution);
-
-            resolutionTest.log(Status.INFO, "Browser: " + browser + ", Resolution: " + resolution + ", Site: " + site);
-
+            String scenarioName = "Scenario Test: Submission without country selection";
+            createTestNodes(site, browser, resolution, scenarioName);
             //Given: Setting up the site, browser and screen resolution, navigated to subscription form
             driver = BrowserConfig.getDriver(browser);
             ScreenSizeConfig.setScreenSize(driver, resolution);
@@ -335,9 +318,9 @@ public class EmailSubscriptionTest {
 
             //Then: Success validation message is showing
             subscription.validateDataEmail(expectedResultEmail);
-            resolutionTest.log(Status.PASS, "Test Succeed");
+            scenarioTest.log(Status.PASS, "Test Succeed");
         } catch (Exception e) {
-            resolutionTest.log(Status.FAIL, "Test failed because of " + e);
+            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
             e.printStackTrace();
         } finally {
             if (driver != null){
@@ -348,20 +331,12 @@ public class EmailSubscriptionTest {
     }
 
     //Attempt to submit without filling in any fields (groupJ)
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupJ")
-    void testEmailSubs09(String browser, String site, String resolution, String expectedResultEmail){
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupH")
+    void testEmailSubs08(String browser, String site, String resolution, String expectedResultEmail){
         //scenario: User want to subscribe daily devotional by email
         try{
-            if (siteTest == null || !siteTest.getModel().getName().equals(site)){
-                siteTest = extent.createTest(site);
-            }
-            if (browserTest == null || !browserTest.getModel().getName().equals("Browser: " + browser)){
-                browserTest = siteTest.createNode("Browser: " + browser);
-            }
-            resolutionTest = browserTest.createNode( "Resolution: " + resolution);
-
-            resolutionTest.log(Status.INFO, "Browser: " + browser + ", Resolution: " + resolution + ", Site: " + site);
-
+            String scenarioName = "Scenario Test: Attempt to submit without filling in any fields";
+            createTestNodes(site, browser, resolution, scenarioName);
             //Given: Setting up the site, browser and screen resolution, navigated to subscription form
             driver = BrowserConfig.getDriver(browser);
             ScreenSizeConfig.setScreenSize(driver, resolution);
@@ -382,9 +357,9 @@ public class EmailSubscriptionTest {
 
             //Then: Success validation message is showing
             subscription.validateDataEmail(expectedResultEmail);
-            resolutionTest.log(Status.PASS, "Test Succeed");
+            scenarioTest.log(Status.PASS, "Test Succeed");
         } catch (Exception e) {
-            resolutionTest.log(Status.FAIL, "Test failed because of " + e);
+            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
             e.printStackTrace();
         } finally {
             if (driver != null){
@@ -394,20 +369,12 @@ public class EmailSubscriptionTest {
         }
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupK")
-    void testEmailSubs10(String browser, String site, String resolution, String expectedResultEmail){
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupI")
+    void testEmailSubs09(String browser, String site, String resolution, String expectedResultEmail){
         //scenario: User want to subscribe daily devotional by email
         try{
-            if (siteTest == null || !siteTest.getModel().getName().equals(site)){
-                siteTest = extent.createTest(site);
-            }
-            if (browserTest == null || !browserTest.getModel().getName().equals("Browser: " + browser)){
-                browserTest = siteTest.createNode("Browser: " + browser);
-            }
-            resolutionTest = browserTest.createNode( "Resolution: " + resolution);
-
-            resolutionTest.log(Status.INFO, "Browser: " + browser + ", Resolution: " + resolution + ", Site: " + site);
-
+            String scenarioName = "Scenario Test: Subscription with extra long information";
+            createTestNodes(site, browser, resolution, scenarioName);
             //Given: Setting up the site, browser and screen resolution, navigated to subscription form
             driver = BrowserConfig.getDriver(browser);
             ScreenSizeConfig.setScreenSize(driver, resolution);
@@ -429,9 +396,9 @@ public class EmailSubscriptionTest {
 
             //Then: Success validation message is showing
             subscription.validateDataEmail(expectedResultEmail);
-            resolutionTest.log(Status.PASS, "Test Succeed");
+            scenarioTest.log(Status.PASS, "Test Succeed");
         } catch (Exception e) {
-            resolutionTest.log(Status.FAIL, "Test failed because of " + e);
+            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
             e.printStackTrace();
         } finally {
             if (driver != null){

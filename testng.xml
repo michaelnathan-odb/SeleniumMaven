@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="All Test Suite" thread-count="4" parallel="methods"> <!-- or parallel="classes" -->
+    <test name="Email Subscription Tests">
+        <classes>
+            <class name="tests.EmailSubscriptionTest">
+                <methods>
+                    <include name="testEmailSubs01"/>
+                    <include name="testEmailSubs02"/>
+                    <include name="testEmailSubs03"/>
+                    <include name="testEmailSubs04"/>
+                    <include name="testEmailSubs05"/>
+                    <include name="testEmailSubs06"/>
+                    <include name="testEmailSubs07"/>
+                    <include name="testEmailSubs08"/>
+                    <include name="testEmailSubs09"/>
+                </methods>
+            </class>
+        </classes>
+    </test> <!--  Test  -->
+</suite> <!--  Suite  -->
