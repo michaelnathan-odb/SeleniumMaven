@@ -12,7 +12,7 @@ import java.util.List;
 
 public class TestDataProvider {
 
-    @DataProvider(name = "provider")
+    @DataProvider(name = "provider", parallel = true)
     public Object[][] dataProvider() throws IOException {
         // Parse the JSON file
         FileReader reader = new FileReader("src/main/resources/testData2.json");

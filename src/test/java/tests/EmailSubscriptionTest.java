@@ -6,6 +6,8 @@ import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import config.BrowserConfig;
 import config.ScreenSizeConfig;
+import junit.framework.Assert;
+
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.*;
 import pages.Subscription;
@@ -14,11 +16,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EmailSubscriptionTest {
-    public static WebDriver driver;
+    // public static WebDriver driver;
 
     //report
     static ExtentReports extent = new ExtentReports();
     static ExtentSparkReporter sparkReporter;
+
+    private static ThreadLocal<WebDriver> driver = new ThreadLocal<WebDriver>();
 
     private ExtentTest scenarioTest = null;
     private final Map<String, ExtentTest> siteMap = new HashMap<>();
@@ -69,13 +73,13 @@ public class EmailSubscriptionTest {
             String scenarioName = "Scenario Test: Successful subscription with valid input";
             createTestNodes(site, browser, resolution, scenarioName);
 
-            driver = BrowserConfig.getDriver(browser);
-            ScreenSizeConfig.setScreenSize(driver, resolution);
-            driver.get(site);
+            driver.set(BrowserConfig.getDriver(browser));
+            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+            driver.get().get(site);
 
             System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
             Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver);
+            Subscription subscription = new Subscription(driver.get());
             subscription.clickEmailSubs();
             subscription.emailGreen01();
             subscription.submitFormEmail();
@@ -88,7 +92,8 @@ public class EmailSubscriptionTest {
             e.printStackTrace();
         } finally {
             if (driver != null){
-                driver.quit();
+                driver.get().quit();
+                driver.remove();
             }
         }
     }
@@ -101,14 +106,14 @@ public class EmailSubscriptionTest {
             createTestNodes(site, browser, resolution, scenarioName);
 
             //Given: Setting up the site, browser and screen resolution, navigated to subscription form
-            driver = BrowserConfig.getDriver(browser);
-            ScreenSizeConfig.setScreenSize(driver, resolution);
-            driver.get(site);
+            driver.set(BrowserConfig.getDriver(browser));
+            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+            driver.get().get(site);
 
             //Then: User is at the subscription page
             System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
             Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver);
+            Subscription subscription = new Subscription(driver.get());
 
             //When: User click the email subscription form
             //And: User close the site's cookies
@@ -128,12 +133,13 @@ public class EmailSubscriptionTest {
         } finally {
             if (driver != null){
                 //close the browser
-                driver.quit();
+                driver.get().quit();
+                driver.remove();
             }
         }
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupC")
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs03(String browser, String site, String resolution, String expectedResultEmail){
         //scenario: User want to subscribe daily devotional by email
         try{
@@ -141,14 +147,14 @@ public class EmailSubscriptionTest {
             createTestNodes(site, browser, resolution, scenarioName);
 
             //Given: Setting up the site, browser and screen resolution, navigated to subscription form
-            driver = BrowserConfig.getDriver(browser);
-            ScreenSizeConfig.setScreenSize(driver, resolution);
-            driver.get(site);
+            driver.set(BrowserConfig.getDriver(browser));
+            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+            driver.get().get(site);
 
             //Then: User is at the subscription page
             System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
             Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver);
+            Subscription subscription = new Subscription(driver.get());
 
             //When: User click the email subscription form
             //And: User close the site's cookies
@@ -168,12 +174,13 @@ public class EmailSubscriptionTest {
         } finally {
             if (driver != null){
                 //close the browser
-                driver.quit();
+                driver.get().quit();
+                driver.remove();
             }
         }
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupD")
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs04(String browser, String site, String resolution, String expectedResultEmail){
         //scenario: User want to subscribe daily devotional by email
         try{
@@ -181,14 +188,14 @@ public class EmailSubscriptionTest {
             createTestNodes(site, browser, resolution, scenarioName);
 
             //Given: Setting up the site, browser and screen resolution, navigated to subscription form
-            driver = BrowserConfig.getDriver(browser);
-            ScreenSizeConfig.setScreenSize(driver, resolution);
-            driver.get(site);
+             driver.set(BrowserConfig.getDriver(browser));
+            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+            driver.get().get(site);
 
             //Then: User is at the subscription page
             System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
             Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver);
+            Subscription subscription = new Subscription(driver.get());
 
             //When: User click the email subscription form
             //And: User close the site's cookies
@@ -208,26 +215,27 @@ public class EmailSubscriptionTest {
         } finally {
             if (driver != null){
                 //close the browser
-                driver.quit();
+                driver.get().quit();
+                driver.remove();
             }
         }
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupE")
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs05(String browser, String site, String resolution, String expectedResultEmail){
         //scenario: User want to subscribe daily devotional by email
         try{
             String scenarioName = "Scenario Test: Subscription without checking the agreement checkbox";
             createTestNodes(site, browser, resolution, scenarioName);
             //Given: Setting up the site, browser and screen resolution, navigated to subscription form
-            driver = BrowserConfig.getDriver(browser);
-            ScreenSizeConfig.setScreenSize(driver, resolution);
-            driver.get(site);
+             driver.set(BrowserConfig.getDriver(browser));
+            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+            driver.get().get(site);
 
             //Then: User is at the subscription page
             System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
             Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver);
+            Subscription subscription = new Subscription(driver.get());
 
             //When: User click the email subscription form
             //And: User close the site's cookies
@@ -247,26 +255,27 @@ public class EmailSubscriptionTest {
         } finally {
             if (driver != null){
                 //close the browser
-                driver.quit();
+                driver.get().quit();
+                driver.remove();
             }
         }
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupF")
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs06(String browser, String site, String resolution, String expectedResultEmail){
         //scenario: User want to subscribe daily devotional by email
         try{
             String scenarioName = "Scenario Test: Submission with blank email";
             createTestNodes(site, browser, resolution, scenarioName);
             //Given: Setting up the site, browser and screen resolution, navigated to subscription form
-            driver = BrowserConfig.getDriver(browser);
-            ScreenSizeConfig.setScreenSize(driver, resolution);
-            driver.get(site);
+             driver.set(BrowserConfig.getDriver(browser));
+            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+            driver.get().get(site);
 
             //Then: User is at the subscription page
             System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
             Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver);
+            Subscription subscription = new Subscription(driver.get());
 
             //When: User click the email subscription form
             //And: User close the site's cookies
@@ -286,26 +295,27 @@ public class EmailSubscriptionTest {
         } finally {
             if (driver != null){
                 //close the browser
-                driver.quit();
+                driver.get().quit();
+                driver.remove();
             }
         }
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupG")
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs07(String browser, String site, String resolution, String expectedResultEmail){
         //scenario: User want to subscribe daily devotional by email
         try{
             String scenarioName = "Scenario Test: Submission without country selection";
             createTestNodes(site, browser, resolution, scenarioName);
             //Given: Setting up the site, browser and screen resolution, navigated to subscription form
-            driver = BrowserConfig.getDriver(browser);
-            ScreenSizeConfig.setScreenSize(driver, resolution);
-            driver.get(site);
+            driver.set(BrowserConfig.getDriver(browser));
+            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+            driver.get().get(site);
 
             //Then: User is at the subscription page
             System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
             Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver);
+            Subscription subscription = new Subscription(driver.get());
 
             //When: User click the email subscription form
             //And: User close the site's cookies
@@ -325,27 +335,28 @@ public class EmailSubscriptionTest {
         } finally {
             if (driver != null){
                 //close the browser
-                driver.quit();
+                driver.get().quit();
+                driver.remove();
             }
         }
     }
 
     //Attempt to submit without filling in any fields (groupJ)
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupH")
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs08(String browser, String site, String resolution, String expectedResultEmail){
         //scenario: User want to subscribe daily devotional by email
         try{
             String scenarioName = "Scenario Test: Attempt to submit without filling in any fields";
             createTestNodes(site, browser, resolution, scenarioName);
             //Given: Setting up the site, browser and screen resolution, navigated to subscription form
-            driver = BrowserConfig.getDriver(browser);
-            ScreenSizeConfig.setScreenSize(driver, resolution);
-            driver.get(site);
+             driver.set(BrowserConfig.getDriver(browser));
+            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+            driver.get().get(site);
 
             //Then: User is at the subscription page
             System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
             Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver);
+            Subscription subscription = new Subscription(driver.get());
 
             //When: User click the email subscription form
             //And: User close the site's cookies
@@ -364,26 +375,27 @@ public class EmailSubscriptionTest {
         } finally {
             if (driver != null){
                 //close the browser
-                driver.quit();
+                driver.get().quit();
+                driver.remove();
             }
         }
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupI")
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs09(String browser, String site, String resolution, String expectedResultEmail){
         //scenario: User want to subscribe daily devotional by email
         try{
             String scenarioName = "Scenario Test: Subscription with extra long information";
             createTestNodes(site, browser, resolution, scenarioName);
             //Given: Setting up the site, browser and screen resolution, navigated to subscription form
-            driver = BrowserConfig.getDriver(browser);
-            ScreenSizeConfig.setScreenSize(driver, resolution);
-            driver.get(site);
+            driver.set(BrowserConfig.getDriver(browser));
+            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+            driver.get().get(site);
 
             //Then: User is at the subscription page
             System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
             Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver);
+            Subscription subscription = new Subscription(driver.get());
 
             //When: User click the email subscription form
             //And: User close the site's cookies
@@ -403,9 +415,16 @@ public class EmailSubscriptionTest {
         } finally {
             if (driver != null){
                 //close the browser
-                driver.quit();
+                driver.get().quit();
+                driver.remove();
             }
         }
+    }
+
+    @AfterMethod
+    public void removeDriver(){
+        driver.get().quit();
+        driver.remove();
     }
 
     @AfterSuite
@@ -425,9 +444,9 @@ public class EmailSubscriptionTest {
             browserTest = browserTest.createNode("Browser: " + browser + ", Resolution: " + resolution);
             browserTest.log(Status.INFO, "Browser: " + browser + ", Resolution: " + resolution + ", Site: " + site);
 
-            driver = BrowserConfig.getDriver(browser);
-            ScreenSizeConfig.setScreenSize(driver, resolution);
-            driver.get(site);
+             driver.set(BrowserConfig.getDriver(browser));
+            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+            driver.get().get(site);
 
             String siteTitle = driver.getTitle();
             System.out.println("Site Title: " + siteTitle);
