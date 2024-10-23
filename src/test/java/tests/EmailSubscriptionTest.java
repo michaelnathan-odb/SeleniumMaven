@@ -6,18 +6,16 @@ import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import config.BrowserConfig;
 import config.ScreenSizeConfig;
-import junit.framework.Assert;
-
+import org.junit.experimental.theories.Theories;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.*;
+import org.testng.asserts.SoftAssert;
 import pages.Subscription;
 import utils.TestDataProvider;
 import java.util.HashMap;
 import java.util.Map;
 
 public class EmailSubscriptionTest {
-    // public static WebDriver driver;
-
     //report
     static ExtentReports extent = new ExtentReports();
     static ExtentSparkReporter sparkReporter;
@@ -56,11 +54,10 @@ public class EmailSubscriptionTest {
             resolutionMap.put(resolutionKey, resolutionTest);
         }
         scenarioTest = resolutionTest.createNode(scenario);
-
-        scenarioTest.log(Status.INFO, "Browser: " + browser + ", Resolution: " + resolution + ", Site: " + site + ", Scenario: " + scenario);
+        scenarioTest.log(Status.INFO, "Browser: " + browser + ", Resolution: " + resolution + ", Site: " + site + ".");
     }
 
-    @BeforeSuite
+    @BeforeMethod
     public void setupSuite(){
         extent = new ExtentReports();
         sparkReporter = new ExtentSparkReporter("target/Spark01.html");
@@ -69,395 +66,217 @@ public class EmailSubscriptionTest {
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
     void testEmailSubs01(String browser, String site, String resolution, String expectedResultEmail){
-        try{
-            String scenarioName = "Scenario Test: Successful subscription with valid input";
-            createTestNodes(site, browser, resolution, scenarioName);
+        String scenarioName = "Scenario Test: Successful subscription with valid input";
+        createTestNodes(site, browser, resolution, scenarioName);
 
-            driver.set(BrowserConfig.getDriver(browser));
-            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-            driver.get().get(site);
+        driver.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+        driver.get().get(site);
 
-            System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-            Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver.get());
-            subscription.clickEmailSubs();
-            subscription.emailGreen01();
-            subscription.submitFormEmail();
-            Thread.sleep(8000);
-            subscription.validateDataEmail(expectedResultEmail);
-
-            scenarioTest.log(Status.PASS, "Test Succeed");
-        } catch (Exception e) {
-            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
-            e.printStackTrace();
-        } finally {
-            if (driver != null){
-                driver.get().quit();
-                driver.remove();
-            }
-        }
+        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
+        Subscription subscription = new Subscription(driver.get());
+        subscription.clickEmailSubs();
+        subscription.emailFieldFill();
+        subscription.submitFormEmail();
+        subscription.validateDataEmail(expectedResultEmail);
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
-    void testEmailSubs02(String browser, String site, String resolution, String expectedResultEmail){
-        //scenario: User want to subscribe daily devotional by email
-        try{
-            String scenarioName = "Scenario Test: Subscription with optional fields left blank (without first name and last name)";
-            createTestNodes(site, browser, resolution, scenarioName);
+    void testEmailSubs02(String browser, String site, String resolution, String expectedResultEmail) throws InterruptedException {
+        String scenarioName = "Scenario Test: Subscription with optional fields left blank (without first name and last name)";
+        createTestNodes(site, browser, resolution, scenarioName);
 
-            //Given: Setting up the site, browser and screen resolution, navigated to subscription form
-            driver.set(BrowserConfig.getDriver(browser));
-            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-            driver.get().get(site);
+        driver.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+        driver.get().get(site);
 
-            //Then: User is at the subscription page
-            System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-            Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver.get());
+        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
+        Subscription subscription = new Subscription(driver.get());
 
-            //When: User click the email subscription form
-            //And: User close the site's cookies
-            subscription.clickEmailSubs();
+        subscription.clickEmailSubs();
+        subscription.emailRed01();
+        subscription.submitFormEmail();
 
-            //Then: User enter the information (email, first and last name, country)
-            subscription.emailGreen02();
-            subscription.submitFormEmail();
-            Thread.sleep(8000);
+        boolean alertFNameDisplayed = subscription.isFirstNameAlertPresent();
+        boolean alertLNameDisplayed = subscription.isLastnameAlertPresent();
 
-            //Then: Success validation message is showing
-            subscription.validateDataEmail(expectedResultEmail);
+        if (alertFNameDisplayed && alertLNameDisplayed){
             scenarioTest.log(Status.PASS, "Test Succeed");
-        } catch (Exception e) {
-            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
-            e.printStackTrace();
-        } finally {
-            if (driver != null){
-                //close the browser
-                driver.get().quit();
-                driver.remove();
-            }
+        } else {
+            scenarioTest.log(Status.FAIL, "Test failed because of the alert not presented");
         }
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
     void testEmailSubs03(String browser, String site, String resolution, String expectedResultEmail){
-        //scenario: User want to subscribe daily devotional by email
-        try{
-            String scenarioName = "Scenario Test: Subscription with a different country selection";
-            createTestNodes(site, browser, resolution, scenarioName);
+        String scenarioName = "Scenario Test: Subscription with a different country selection";
+        createTestNodes(site, browser, resolution, scenarioName);
 
-            //Given: Setting up the site, browser and screen resolution, navigated to subscription form
-            driver.set(BrowserConfig.getDriver(browser));
-            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-            driver.get().get(site);
+        driver.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+        driver.get().get(site);
 
-            //Then: User is at the subscription page
-            System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-            Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver.get());
+        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
+        Subscription subscription = new Subscription(driver.get());
 
-            //When: User click the email subscription form
-            //And: User close the site's cookies
-            subscription.clickEmailSubs();
-
-            //Then: User enter the information (email, first and last name, country)
-            subscription.emailGreen03();
-            subscription.submitFormEmail();
-            Thread.sleep(8000);
-
-            //Then: Success validation message is showing
-            subscription.validateDataEmail(expectedResultEmail);
-            scenarioTest.log(Status.PASS, "Test Succeed");
-        } catch (Exception e) {
-            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
-            e.printStackTrace();
-        } finally {
-            if (driver != null){
-                //close the browser
-                driver.get().quit();
-                driver.remove();
-            }
-        }
+        subscription.clickEmailSubs();
+        subscription.emailRed02();
+        subscription.submitFormEmail();
+        subscription.validateDataEmail(expectedResultEmail);
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs04(String browser, String site, String resolution, String expectedResultEmail){
-        //scenario: User want to subscribe daily devotional by email
-        try{
-            String scenarioName = "Scenario Test: Subscription with an invalid email format";
-            createTestNodes(site, browser, resolution, scenarioName);
+        String scenarioName = "Scenario Test: Subscription with an invalid email format";
+        createTestNodes(site, browser, resolution, scenarioName);
 
-            //Given: Setting up the site, browser and screen resolution, navigated to subscription form
-             driver.set(BrowserConfig.getDriver(browser));
-            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-            driver.get().get(site);
+         driver.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+        driver.get().get(site);
 
-            //Then: User is at the subscription page
-            System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-            Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver.get());
+        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
+        Subscription subscription = new Subscription(driver.get());
 
-            //When: User click the email subscription form
-            //And: User close the site's cookies
-            subscription.clickEmailSubs();
+        subscription.clickEmailSubs();
+        subscription.emailRed03();
+        subscription.submitFormEmail();
 
-            //Then: User enter the information (email, first and last name, country)
-            subscription.emailRed01();
-            subscription.submitFormEmail();
-            Thread.sleep(8000);
+        boolean isAlertDisplayed = subscription.isEmailAlertPresent();
 
-            //Then: Success validation message is showing
-            subscription.validateDataEmail(expectedResultEmail);
+        if (isAlertDisplayed){
             scenarioTest.log(Status.PASS, "Test Succeed");
-        } catch (Exception e) {
-            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
-            e.printStackTrace();
-        } finally {
-            if (driver != null){
-                //close the browser
-                driver.get().quit();
-                driver.remove();
-            }
+        } else {
+            scenarioTest.log(Status.FAIL, "Test failed because of the alert not presented");
         }
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs05(String browser, String site, String resolution, String expectedResultEmail){
-        //scenario: User want to subscribe daily devotional by email
-        try{
-            String scenarioName = "Scenario Test: Subscription without checking the agreement checkbox";
-            createTestNodes(site, browser, resolution, scenarioName);
-            //Given: Setting up the site, browser and screen resolution, navigated to subscription form
-             driver.set(BrowserConfig.getDriver(browser));
-            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-            driver.get().get(site);
+        String scenarioName = "Scenario Test: Subscription without checking the agreement checkbox";
+        createTestNodes(site, browser, resolution, scenarioName);
 
-            //Then: User is at the subscription page
-            System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-            Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver.get());
+        driver.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+        driver.get().get(site);
 
-            //When: User click the email subscription form
-            //And: User close the site's cookies
-            subscription.clickEmailSubs();
+        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
+        Subscription subscription = new Subscription(driver.get());
 
-            //Then: User enter the information (email, first and last name, country)
-            subscription.emailRed02();
-            subscription.submitFormEmail();
-            Thread.sleep(8000);
+        subscription.clickEmailSubs();
+        subscription.emailRed04();
+        subscription.submitFormEmail();
 
-            //Then: Success validation message is showing
-            subscription.validateDataEmail(expectedResultEmail);
+        boolean isCheckboxAlertDisplayed = subscription.isCheckboxAlertPresent();
+
+        if (isCheckboxAlertDisplayed){
             scenarioTest.log(Status.PASS, "Test Succeed");
-        } catch (Exception e) {
-            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
-            e.printStackTrace();
-        } finally {
-            if (driver != null){
-                //close the browser
-                driver.get().quit();
-                driver.remove();
-            }
+        } else {
+            scenarioTest.log(Status.FAIL, "Test failed because of the alert not presented");
         }
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs06(String browser, String site, String resolution, String expectedResultEmail){
-        //scenario: User want to subscribe daily devotional by email
-        try{
-            String scenarioName = "Scenario Test: Submission with blank email";
-            createTestNodes(site, browser, resolution, scenarioName);
-            //Given: Setting up the site, browser and screen resolution, navigated to subscription form
-             driver.set(BrowserConfig.getDriver(browser));
-            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-            driver.get().get(site);
+        String scenarioName = "Scenario Test: Submission with blank email";
+        createTestNodes(site, browser, resolution, scenarioName);
 
-            //Then: User is at the subscription page
-            System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-            Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver.get());
+        driver.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+        driver.get().get(site);
 
-            //When: User click the email subscription form
-            //And: User close the site's cookies
-            subscription.clickEmailSubs();
+        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
+        Subscription subscription = new Subscription(driver.get());
 
-            //Then: User enter the information (email, first and last name, country)
-            subscription.emailRed03();
-            subscription.submitFormEmail();
-            Thread.sleep(8000);
+        subscription.clickEmailSubs();
+        subscription.emailRed05();
+        subscription.submitFormEmail();
 
-            //Then: Success validation message is showing
-            subscription.validateDataEmail(expectedResultEmail);
+        boolean isAlertDisplayed = subscription.isEmailAlertPresent();
+
+        if (isAlertDisplayed){
             scenarioTest.log(Status.PASS, "Test Succeed");
-        } catch (Exception e) {
-            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
-            e.printStackTrace();
-        } finally {
-            if (driver != null){
-                //close the browser
-                driver.get().quit();
-                driver.remove();
-            }
+        } else {
+            scenarioTest.log(Status.FAIL, "Test failed because of the alert not presented");
         }
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs07(String browser, String site, String resolution, String expectedResultEmail){
-        //scenario: User want to subscribe daily devotional by email
-        try{
-            String scenarioName = "Scenario Test: Submission without country selection";
-            createTestNodes(site, browser, resolution, scenarioName);
-            //Given: Setting up the site, browser and screen resolution, navigated to subscription form
-            driver.set(BrowserConfig.getDriver(browser));
-            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-            driver.get().get(site);
+        String scenarioName = "Scenario Test: Submission without country selection";
+        createTestNodes(site, browser, resolution, scenarioName);
 
-            //Then: User is at the subscription page
-            System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-            Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver.get());
+        driver.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+        driver.get().get(site);
 
-            //When: User click the email subscription form
-            //And: User close the site's cookies
-            subscription.clickEmailSubs();
+        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
+        Subscription subscription = new Subscription(driver.get());
 
-            //Then: User enter the information (email, first and last name, country)
-            subscription.emailRed04();
-            subscription.submitFormEmail();
-            Thread.sleep(8000);
+        subscription.clickEmailSubs();
 
-            //Then: Success validation message is showing
-            subscription.validateDataEmail(expectedResultEmail);
+        subscription.emailRed06();
+        subscription.submitFormEmail();
+
+        boolean isAlertDisplayed = subscription.isCountryAlertPresent();
+
+        if (isAlertDisplayed){
             scenarioTest.log(Status.PASS, "Test Succeed");
-        } catch (Exception e) {
-            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
-            e.printStackTrace();
-        } finally {
-            if (driver != null){
-                //close the browser
-                driver.get().quit();
-                driver.remove();
-            }
+        } else {
+            scenarioTest.log(Status.FAIL, "Test failed because of the alert not presented");
         }
     }
 
     //Attempt to submit without filling in any fields (groupJ)
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs08(String browser, String site, String resolution, String expectedResultEmail){
-        //scenario: User want to subscribe daily devotional by email
-        try{
-            String scenarioName = "Scenario Test: Attempt to submit without filling in any fields";
-            createTestNodes(site, browser, resolution, scenarioName);
-            //Given: Setting up the site, browser and screen resolution, navigated to subscription form
-             driver.set(BrowserConfig.getDriver(browser));
-            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-            driver.get().get(site);
+        String scenarioName = "Scenario Test: Attempt to submit without filling in any fields";
+        createTestNodes(site, browser, resolution, scenarioName);
 
-            //Then: User is at the subscription page
-            System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-            Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver.get());
+        driver.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+        driver.get().get(site);
 
-            //When: User click the email subscription form
-            //And: User close the site's cookies
-            subscription.clickEmailSubs();
+        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
+        Subscription subscription = new Subscription(driver.get());
 
-            //Then: User enter the information (email, first and last name, country)
-            subscription.submitFormEmail();
-            Thread.sleep(8000);
+        subscription.clickEmailSubs();
+        subscription.submitFormEmail();
 
-            //Then: Success validation message is showing
-            subscription.validateDataEmail(expectedResultEmail);
+        boolean alertEmailDisplayed = subscription.isEmailAlertPresent();
+        boolean alertFNameDisplayed = subscription.isFirstNameAlertPresent();
+        boolean alertLNameDisplayed = subscription.isLastnameAlertPresent();
+        boolean alertCheckboxDisplayed = subscription.isCheckboxAlertPresent();
+        boolean alertCountryDisplayed = subscription.isCountryAlertPresent();
+
+        if (alertEmailDisplayed && alertFNameDisplayed && alertLNameDisplayed && alertCheckboxDisplayed && alertCountryDisplayed){
             scenarioTest.log(Status.PASS, "Test Succeed");
-        } catch (Exception e) {
-            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
-            e.printStackTrace();
-        } finally {
-            if (driver != null){
-                //close the browser
-                driver.get().quit();
-                driver.remove();
-            }
+        } else {
+            scenarioTest.log(Status.FAIL, "Test failed because of the alert not presented");
         }
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
     void testEmailSubs09(String browser, String site, String resolution, String expectedResultEmail){
-        //scenario: User want to subscribe daily devotional by email
-        try{
-            String scenarioName = "Scenario Test: Subscription with extra long information";
-            createTestNodes(site, browser, resolution, scenarioName);
-            //Given: Setting up the site, browser and screen resolution, navigated to subscription form
-            driver.set(BrowserConfig.getDriver(browser));
-            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-            driver.get().get(site);
+        String scenarioName = "Scenario Test: Subscription with extra long information";
+        createTestNodes(site, browser, resolution, scenarioName);
 
-            //Then: User is at the subscription page
-            System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-            Thread.sleep(3000);
-            Subscription subscription = new Subscription(driver.get());
+        driver.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
+        driver.get().get(site);
 
-            //When: User click the email subscription form
-            //And: User close the site's cookies
-            subscription.clickEmailSubs();
-            subscription.emailRed05();
+        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
+        Subscription subscription = new Subscription(driver.get());
 
-            //Then: User enter the information (email, first and last name, country)
-            subscription.submitFormEmail();
-            Thread.sleep(8000);
-
-            //Then: Success validation message is showing
-            subscription.validateDataEmail(expectedResultEmail);
-            scenarioTest.log(Status.PASS, "Test Succeed");
-        } catch (Exception e) {
-            scenarioTest.log(Status.FAIL, "Test failed because of " + e);
-            e.printStackTrace();
-        } finally {
-            if (driver != null){
-                //close the browser
-                driver.get().quit();
-                driver.remove();
-            }
-        }
+        subscription.clickEmailSubs();
+        subscription.emailRed07();
+        subscription.submitFormEmail();
+        subscription.validateDataEmail(expectedResultEmail);
     }
 
     @AfterMethod
-    public void removeDriver(){
+    public void tearDown(){
+        extent.flush();
         driver.get().quit();
         driver.remove();
     }
-
-    @AfterSuite
-    public void tearDownSuite(){
-        extent.flush();
-    }
 }
-
-/*
-// Dummy test
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class)
-    void dummyTest(String browser, String site, String resolution, String expectedResult){
-        try{
-            if (siteTest == null || !siteTest.getModel().getName().equals(site)){
-                siteTest = extent.createTest(site);
-            }
-            browserTest = browserTest.createNode("Browser: " + browser + ", Resolution: " + resolution);
-            browserTest.log(Status.INFO, "Browser: " + browser + ", Resolution: " + resolution + ", Site: " + site);
-
-             driver.set(BrowserConfig.getDriver(browser));
-            ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-            driver.get().get(site);
-
-            String siteTitle = driver.getTitle();
-            System.out.println("Site Title: " + siteTitle);
-            browserTest.log(Status.PASS, "Test Succeed");
-        } catch (Exception e){
-            browserTest.log(Status.FAIL, "Test Failed");
-            e.printStackTrace();
-        } finally {
-            if (driver != null){
-                driver.quit();
-            }
-        }
-    }
-*/

@@ -52,7 +52,7 @@
                 <configuration>
                     <parallel>methods</parallel>
                     <!-- <parallel>classes</parallel> -->
-                    <threadCount>2</threadCount>
+                    <threadCount>6</threadCount>
                     <reuseForks>true</reuseForks>
                 </configuration>
             </plugin>
