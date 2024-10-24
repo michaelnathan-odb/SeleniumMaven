@@ -271,10 +271,11 @@ public class EmailSubscriptionTest {
         subscription.validateDataEmail(expectedResultEmail);
     }
 
+    //browser not closing after test
     @AfterMethod
     public void tearDown(){
         extent.flush();
-        driver.get().quit();
+        driver.get().close();
         driver.remove();
     }
 }
