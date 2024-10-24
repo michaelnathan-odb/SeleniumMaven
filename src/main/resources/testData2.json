@@ -1,7 +1,7 @@
 {
   "testData": [
     {
-      "site": "https://odb.org/subscription/jp/",
+      "site": "https://odb.org/subscription/au/",
       "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
       "expectedResultPrint": "",
       "testCases": [
@@ -16,6 +16,63 @@
         {
           "browser": "firefox",
           "resolution": "desktop"
+        }
+      ]
+    },
+    {
+      "site": "https://odb.org/subscription/barbados/",
+      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
+      "expectedResultPrint": "",
+      "testCases": [
+        {
+          "browser": "chrome",
+          "resolution": "tablet"
+        },
+        {
+          "browser": "edge",
+          "resolution": "desktop"
+        },
+        {
+          "browser": "firefox",
+          "resolution": "mobile"
+        }
+      ]
+    },
+    {
+      "site": "https://odb.org/subscription/jp/",
+      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
+      "expectedResultPrint": "",
+      "testCases": [
+        {
+          "browser": "chrome",
+          "resolution": "desktop"
+        },
+        {
+          "browser": "edge",
+          "resolution": "mobile"
+        },
+        {
+          "browser": "firefox",
+          "resolution": "tablet"
+        }
+      ]
+    },
+    {
+      "site": "https://odb.org/subscription/hongkong/",
+      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
+      "expectedResultPrint": "",
+      "testCases": [
+        {
+          "browser": "chrome",
+          "resolution": "mobile"
+        },
+        {
+          "browser": "edge",
+          "resolution": "mobile"
+        },
+        {
+          "browser": "firefox",
+          "resolution": "mobile"
         }
       ]
     }
