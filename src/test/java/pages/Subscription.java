@@ -84,6 +84,7 @@ public class Subscription {
 
         driver.findElement(By.cssSelector(emailBtnCss)).click();
         WebElement scroll = driver.findElement(By.id(scrollToEmailId));
+
         // Firefox-specific scroll to make sure the element is visible
         if (driver instanceof FirefoxDriver) {
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", scroll);
@@ -92,7 +93,31 @@ public class Subscription {
         new Actions(driver).scrollToElement(scroll).perform();
     }
 
-    //Successful subscription with valid input (groupA)
+    public void fillEmailField(){
+        driver.findElement(By.name(emailName)).sendKeys(formData.email);
+    }
+
+    public void fillInvalidEmailField(){
+        driver.findElement(By.name(emailName)).sendKeys(formData.emailDummy);
+    }
+
+    public void fillFistNameField(){
+        driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
+    }
+
+    public void fillLastNameField(){
+        driver.findElement(By.name(lastName)).sendKeys(formData.lastName);
+    }
+
+    public void fillCountryField(){
+        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
+    }
+
+    public void clickCheckBoxField(){
+        driver.findElement(By.name(checkboxName)).click();
+    }
+
+    //Successful subscription with valid input
     public void emailFieldFill(){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.findElement(By.name(emailName)).sendKeys(formData.email);
@@ -102,7 +127,7 @@ public class Subscription {
         driver.findElement(By.name(checkboxName)).click();
     }
 
-    //Subscription with optional fields left blank (e.g., first name and last name) (groupB)
+    //Subscription with optional fields left blank (e.g., first name and last name)
     public void emailRed01(){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.findElement(By.name(emailName)).sendKeys(formData.email);
@@ -110,7 +135,7 @@ public class Subscription {
         driver.findElement(By.name(checkboxName)).click();
     }
 
-    //Subscription with a different country selection (groupC)
+    //Subscription with a different country selection
     public void emailRed02(){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.findElement(By.name(emailName)).sendKeys(formData.email);
@@ -120,7 +145,7 @@ public class Subscription {
         driver.findElement(By.name(checkboxName)).click();
     }
 
-    //Subscription with an invalid email format (groupE)
+    //Subscription with an invalid email format
     public void emailRed03(){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.findElement(By.name(emailName)).sendKeys(formData.emailInvalid);
@@ -139,7 +164,7 @@ public class Subscription {
         driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
     }
 
-    //Submission with blank email (groupG)
+    //Submission with blank email
     public void emailRed05(){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
@@ -148,7 +173,7 @@ public class Subscription {
         driver.findElement(By.name(checkboxName)).click();
     }
 
-    //Submission with an invalid country selection (groupI)
+    //Submission with an invalid country selection
     public void emailRed06(){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.findElement(By.name(emailName)).sendKeys(formData.email);
@@ -157,7 +182,7 @@ public class Subscription {
         driver.findElement(By.name(checkboxName)).click();
     }
 
-    //Subscription with extra long names or email (groupK)
+    //Subscription with extra long names or email
     public void emailRed07(){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.findElement(By.name(emailName)).sendKeys(formData.emailDummy);
@@ -231,11 +256,7 @@ public class Subscription {
     }
 
     public boolean isEmailAlertPresent() {
-        try {
-            return driver.findElement(By.xpath(emailFocus)).isDisplayed();
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+        return driver.findElement(By.xpath(emailFocus)).isDisplayed();
     }
 
     public boolean isFirstNameAlertPresent() {

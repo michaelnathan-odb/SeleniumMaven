@@ -9,7 +9,11 @@ import config.ScreenSizeConfig;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.*;
 import pages.Subscription;
+import utils.SendEmailReport;
 import utils.TestDataProvider;
+
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,10 +24,20 @@ public class EmailSubscriptionTest {
 
     private static ThreadLocal<WebDriver> driver = new ThreadLocal<WebDriver>();
 
-    private ExtentTest scenarioTest = null;
+    private static ExtentTest scenarioTest = null;
     private final Map<String, ExtentTest> siteMap = new HashMap<>();
     private final Map<String, ExtentTest> browserMap = new HashMap<>();
     private final Map<String, ExtentTest> resolutionMap = new HashMap<>();
+
+    //TODO: Make the scenario test to Thread Local Safe
+
+    @BeforeSuite(alwaysRun = true)
+    public void setupSuite(){
+        System.out.println("Setting up the report");
+        extent = new ExtentReports();
+        sparkReporter = new ExtentSparkReporter("report/Spark.html");
+        extent.attachReporter(sparkReporter);
+    }
 
     private void createTestNodes(String site, String browser, String resolution, String scenario){
         ExtentTest siteTest;
@@ -53,13 +67,6 @@ public class EmailSubscriptionTest {
         }
         scenarioTest = resolutionTest.createNode(scenario);
         scenarioTest.log(Status.INFO, "Browser: " + browser + ", Resolution: " + resolution + ", Site: " + site + ".");
-    }
-
-    @BeforeMethod
-    public void setupSuite(){
-        extent = new ExtentReports();
-        sparkReporter = new ExtentSparkReporter("target/Spark01.html");
-        extent.attachReporter(sparkReporter);
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
@@ -99,7 +106,7 @@ public class EmailSubscriptionTest {
         boolean alertLNameDisplayed = subscription.isLastnameAlertPresent();
 
         if (alertFNameDisplayed && alertLNameDisplayed){
-            scenarioTest.log(Status.PASS, "Test Succeed");
+            scenarioTest.log(Status.PASS, "Test Succeed, form can't be submitted because first and last name are blank");
         } else {
             scenarioTest.log(Status.FAIL, "Test failed because of the alert not presented");
         }
@@ -142,7 +149,7 @@ public class EmailSubscriptionTest {
         boolean isAlertDisplayed = subscription.isEmailAlertPresent();
 
         if (isAlertDisplayed){
-            scenarioTest.log(Status.PASS, "Test Succeed");
+            scenarioTest.log(Status.PASS, "Test Succeed, form can't be submitted because email are invalid");
         } else {
             scenarioTest.log(Status.FAIL, "Test failed because of the alert not presented");
         }
@@ -167,7 +174,7 @@ public class EmailSubscriptionTest {
         boolean isCheckboxAlertDisplayed = subscription.isCheckboxAlertPresent();
 
         if (isCheckboxAlertDisplayed){
-            scenarioTest.log(Status.PASS, "Test Succeed");
+            scenarioTest.log(Status.PASS, "Test Succeed, form can't be submitted without check the agreement");
         } else {
             scenarioTest.log(Status.FAIL, "Test failed because of the alert not presented");
         }
@@ -192,7 +199,7 @@ public class EmailSubscriptionTest {
         boolean isAlertDisplayed = subscription.isEmailAlertPresent();
 
         if (isAlertDisplayed){
-            scenarioTest.log(Status.PASS, "Test Succeed");
+            scenarioTest.log(Status.PASS, "Test Succeed, form can't be submitted because email field are blank");
         } else {
             scenarioTest.log(Status.FAIL, "Test failed because of the alert not presented");
         }
@@ -218,13 +225,13 @@ public class EmailSubscriptionTest {
         boolean isAlertDisplayed = subscription.isCountryAlertPresent();
 
         if (isAlertDisplayed){
-            scenarioTest.log(Status.PASS, "Test Succeed");
+            scenarioTest.log(Status.PASS, "Test Succeed, form can't be submitted without fill the country field");
         } else {
             scenarioTest.log(Status.FAIL, "Test failed because of the alert not presented");
         }
     }
 
-    //Attempt to submit without filling in any fields (groupJ)
+    //Attempt to submit without filling in any fields
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs08(String browser, String site, String resolution, String expectedResultEmail){
         String scenarioName = "Scenario Test: Attempt to submit without filling in any fields";
@@ -247,7 +254,7 @@ public class EmailSubscriptionTest {
         boolean alertCountryDisplayed = subscription.isCountryAlertPresent();
 
         if (alertEmailDisplayed && alertFNameDisplayed && alertLNameDisplayed && alertCheckboxDisplayed && alertCountryDisplayed){
-            scenarioTest.log(Status.PASS, "Test Succeed");
+            scenarioTest.log(Status.PASS, "Test Succeed, can't submit blank form");
         } else {
             scenarioTest.log(Status.FAIL, "Test failed because of the alert not presented");
         }
@@ -272,10 +279,18 @@ public class EmailSubscriptionTest {
     }
 
     //browser not closing after test
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void tearDown(){
-        extent.flush();
+        System.out.println("Tear down method has been executed");
         driver.get().close();
         driver.remove();
+    }
+
+    @AfterSuite(alwaysRun = true)
+    public void endTest()throws MessagingException, IOException{
+        System.out.println("Email sending report has been executed");
+        extent.flush();
+//        String reportPath = "report/Spark.html";
+//        SendEmailReport.sendReport(reportPath);
     }
 }
