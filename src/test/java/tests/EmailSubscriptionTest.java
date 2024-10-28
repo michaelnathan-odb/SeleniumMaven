@@ -9,7 +9,11 @@ import config.ScreenSizeConfig;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.*;
 import pages.Subscription;
+import utils.SendEmailReport;
 import utils.TestDataProvider;
+
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,10 +59,11 @@ public class EmailSubscriptionTest {
         scenarioTest.log(Status.INFO, "Browser: " + browser + ", Resolution: " + resolution + ", Site: " + site + ".");
     }
 
-    @BeforeMethod
+    @BeforeSuite(alwaysRun = true)
     public void setupSuite(){
+        System.out.println("Setting up the report");
         extent = new ExtentReports();
-        sparkReporter = new ExtentSparkReporter("target/Spark01.html");
+        sparkReporter = new ExtentSparkReporter("report/Spark.html");
         extent.attachReporter(sparkReporter);
     }
 
@@ -272,10 +277,18 @@ public class EmailSubscriptionTest {
     }
 
     //browser not closing after test
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void tearDown(){
-        extent.flush();
+        System.out.println("Tear down method has been executed");
         driver.get().close();
         driver.remove();
+    }
+
+    @AfterSuite(alwaysRun = true)
+    public void endTest()throws MessagingException, IOException{
+        System.out.println("Email sending report has been executed");
+        extent.flush();
+        String reportPath = "report/Spark.html";
+        SendEmailReport.sendReport(reportPath);
     }
 }
