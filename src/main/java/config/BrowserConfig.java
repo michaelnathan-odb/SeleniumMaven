@@ -13,7 +13,7 @@ public class BrowserConfig {
         WebDriver driver = null; // Explicitly declared variable
         if ("chrome".equalsIgnoreCase(browser)) {
             ChromeOptions options = new ChromeOptions();
-            options.addArguments("--headless=new");
+            options.addArguments("--headless=old");
             System.setProperty("webdriver.chrome.driver", "src/main/resources/driver/chromedriver.exe");
             driver = new ChromeDriver(options);
         } else if ("firefox".equalsIgnoreCase(browser)) {
@@ -23,7 +23,7 @@ public class BrowserConfig {
             driver = new FirefoxDriver(options);
         } else if ("edge".equalsIgnoreCase(browser)) {
             EdgeOptions options = new EdgeOptions();
-            options.addArguments("--headless=new");
+            options.addArguments("--headless=old");
             System.setProperty("webdriver.edge.driver", "src/main/resources/driver/msedgedriver.exe");
             driver = new EdgeDriver(options);
         }

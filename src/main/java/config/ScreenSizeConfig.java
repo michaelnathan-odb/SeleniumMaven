@@ -7,12 +7,12 @@ public class ScreenSizeConfig {
     public static void setScreenSize(WebDriver driver, String deviceType) {
         driver.manage().window().maximize();
 
-        if ("desktop".equalsIgnoreCase(deviceType)) {
-            driver.manage().window().setSize(new Dimension(1920, 1080));
+        if ("mobile".equalsIgnoreCase(deviceType)) {
+            driver.manage().window().setSize(new Dimension(375, 812));
         } else if ("tablet".equalsIgnoreCase(deviceType)) {
             driver.manage().window().setSize(new Dimension(1024, 768));
-        } else if ("mobile".equalsIgnoreCase(deviceType)) {
-            driver.manage().window().setSize(new Dimension(375, 667));
+        } else if ("desktop".equalsIgnoreCase(deviceType)) {
+            driver.manage().window().maximize();
         } else {
             throw new IllegalArgumentException("Device type not supported: " + deviceType);
         }

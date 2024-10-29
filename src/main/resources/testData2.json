@@ -1,43 +1,24 @@
 {
   "testData": [
     {
-      "site": "https://traditional-odb.org/subscription/my/",
+      "site": "https://odb.org/subscription/au/",
+      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
+      "expectedResultPrint": "",
       "testCases": [
         {
           "browser": "chrome",
           "resolution": "mobile"
-        },
+        }
+      ]
+    },
+    {
+      "site": "https://odb.org/subscription/jp/",
+      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
+      "expectedResultPrint": "",
+      "testCases": [
         {
           "browser": "chrome",
-          "resolution": "tablet"
-        },
-        {
-          "browser": "chrome",
-          "resolution": "desktop"
-        },
-        {
-          "browser": "edge",
           "resolution": "mobile"
-        },
-        {
-          "browser": "edge",
-          "resolution": "tablet"
-        },
-        {
-          "browser": "edge",
-          "resolution": "desktop"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "tablet"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "desktop"
         }
       ]
     }
