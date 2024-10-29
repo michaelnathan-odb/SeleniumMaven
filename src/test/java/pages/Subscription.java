@@ -247,12 +247,13 @@ public class Subscription {
         softAssert.assertAll();
     }
 
-    public void validateDataEmail(String expectedResultEmail){
+    public boolean validateDataEmail(String expectedResultEmail){
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(successStatusClass)));
         String actualStatus = driver.findElement(By.cssSelector(successStatusClass)).getText();
         softAssert.assertEquals(actualStatus,expectedResultEmail, "Response result doesn't met, test failed!");
         softAssert.assertAll();
+        return true;
     }
 
     public boolean isEmailAlertPresent() {

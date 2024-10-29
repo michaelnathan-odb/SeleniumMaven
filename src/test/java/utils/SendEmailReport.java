@@ -1,5 +1,7 @@
 package utils;
 
+import com.aventstack.extentreports.ExtentTest;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -10,10 +12,11 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 public class SendEmailReport {
-    public static void sendReport(String filePath) throws MessagingException, IOException {
+    public static void sendReport(String filePath, List<ExtentTest> scenarioTest) throws MessagingException, IOException {
         // Load properties from config.properties
         Properties props = new Properties();
         try (FileInputStream input = new FileInputStream("src/main/resources/config.properties")) {
@@ -42,9 +45,11 @@ public class SendEmailReport {
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(props.getProperty("mail.to")));
         message.setSubject(props.getProperty("mail.subject"));
 
+
         // Email body text
+        String emailBodyContent = AutomationReport.createEmailBody(scenarioTest);
         BodyPart messageBodyPart = new MimeBodyPart();
-        messageBodyPart.setText(props.getProperty("mail.body"));
+        messageBodyPart.setContent(emailBodyContent, "text/html");
         //TODO: Customize the email body using string layout for reporting string to email
 
         Multipart multipart = new MimeMultipart();
