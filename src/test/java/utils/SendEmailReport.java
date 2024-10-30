@@ -1,6 +1,7 @@
 package utils;
 
 import com.aventstack.extentreports.ExtentTest;
+import tests.ReportData;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class SendEmailReport {
-    public static void sendReport(String filePath, List<ExtentTest> scenarioTest) throws MessagingException, IOException {
+    public static void sendReport(String filePath, List<ReportData> scenarioTest) throws MessagingException, IOException {
         // Load properties from config.properties
         Properties props = new Properties();
         try (FileInputStream input = new FileInputStream("src/main/resources/config.properties")) {
@@ -44,7 +45,6 @@ public class SendEmailReport {
         message.setFrom(new InternetAddress(props.getProperty("mail.from")));
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(props.getProperty("mail.to")));
         message.setSubject(props.getProperty("mail.subject"));
-
 
         // Email body text
         String emailBodyContent = AutomationReport.createEmailBody(scenarioTest);

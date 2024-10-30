@@ -15,7 +15,7 @@ public class Subscription {
 
     SoftAssert softAssert = new SoftAssert();
 
-    public Subscription(WebDriver _driver){
+    public Subscription(WebDriver _driver) {
         driver = _driver;
     }
 
@@ -75,10 +75,10 @@ public class Subscription {
     public static String successStatusP = "div.wpcf7-response-output.alert";
     //<div class="wpcf7-response-output alert" style="display: block;">Thank you for your message. It has been sent.</div>
 
-    public void clickEmailSubs(){
+    public void clickEmailSubs() {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
-        if (!(driver instanceof FirefoxDriver) && !driver.findElements(By.cssSelector(closeCookie)).isEmpty()){
+        if (!(driver instanceof FirefoxDriver) && !driver.findElements(By.cssSelector(closeCookie)).isEmpty()) {
             driver.findElement(By.cssSelector(closeCookie)).click();
         }
 
@@ -93,32 +93,48 @@ public class Subscription {
         new Actions(driver).scrollToElement(scroll).perform();
     }
 
-    public void fillEmailField(){
+    public void fillEmailField() {
         driver.findElement(By.name(emailName)).sendKeys(formData.email);
     }
 
-    public void fillInvalidEmailField(){
+    public void fillEmailFieldDummy() {
         driver.findElement(By.name(emailName)).sendKeys(formData.emailDummy);
     }
 
-    public void fillFistNameField(){
+    public void fillInvalidEmailField() {
+        driver.findElement(By.name(emailName)).sendKeys(formData.emailInvalid);
+    }
+
+    public void fillFirstNameField() {
         driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
     }
 
-    public void fillLastNameField(){
+    public void fillLongFirstNameField() {
+        driver.findElement(By.name(firstName)).sendKeys(formData.firstNameDummy);
+    }
+
+    public void fillLastNameField() {
         driver.findElement(By.name(lastName)).sendKeys(formData.lastName);
     }
 
-    public void fillCountryField(){
+    public void fillLongLastNameField() {
+        driver.findElement(By.name(lastName)).sendKeys(formData.lastNameDummy);
+    }
+
+    public void fillCountryField() {
         driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
     }
 
-    public void clickCheckBoxField(){
+    public void fillCountryField2() {
+        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country01);
+    }
+
+    public void clickCheckBoxField() {
         driver.findElement(By.name(checkboxName)).click();
     }
 
     //Successful subscription with valid input
-    public void emailFieldFill(){
+    public void emailFieldFill() {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.findElement(By.name(emailName)).sendKeys(formData.email);
         driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
@@ -127,72 +143,7 @@ public class Subscription {
         driver.findElement(By.name(checkboxName)).click();
     }
 
-    //Subscription with optional fields left blank (e.g., first name and last name)
-    public void emailRed01(){
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        driver.findElement(By.name(emailName)).sendKeys(formData.email);
-        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
-        driver.findElement(By.name(checkboxName)).click();
-    }
-
-    //Subscription with a different country selection
-    public void emailRed02(){
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        driver.findElement(By.name(emailName)).sendKeys(formData.email);
-        driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
-        driver.findElement(By.name(lastName)).sendKeys(formData.lastName);
-        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country01);
-        driver.findElement(By.name(checkboxName)).click();
-    }
-
-    //Subscription with an invalid email format
-    public void emailRed03(){
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        driver.findElement(By.name(emailName)).sendKeys(formData.emailInvalid);
-        driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
-        driver.findElement(By.name(lastName)).sendKeys(formData.lastName);
-        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
-        driver.findElement(By.name(checkboxName)).click();
-    }
-
-    //Subscription without checking the agreement checkbox (groupF)
-    public void emailRed04(){
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        driver.findElement(By.name(emailName)).sendKeys(formData.emailInvalid);
-        driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
-        driver.findElement(By.name(lastName)).sendKeys(formData.lastName);
-        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
-    }
-
-    //Submission with blank email
-    public void emailRed05(){
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
-        driver.findElement(By.name(lastName)).sendKeys(formData.lastName);
-        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
-        driver.findElement(By.name(checkboxName)).click();
-    }
-
-    //Submission with an invalid country selection
-    public void emailRed06(){
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        driver.findElement(By.name(emailName)).sendKeys(formData.email);
-        driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
-        driver.findElement(By.name(lastName)).sendKeys(formData.lastName);
-        driver.findElement(By.name(checkboxName)).click();
-    }
-
-    //Subscription with extra long names or email
-    public void emailRed07(){
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        driver.findElement(By.name(emailName)).sendKeys(formData.emailDummy);
-        driver.findElement(By.name(firstName)).sendKeys(formData.firstNameDummy);
-        driver.findElement(By.name(lastName)).sendKeys(formData.lastNameDummy);
-        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
-        driver.findElement(By.name(checkboxName)).click();
-    }
-
-    public void clickPrintSubs(){
+    public void clickPrintSubs() {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.findElement(By.xpath(closeCookie)).click();
         driver.findElement(By.cssSelector(printBtnCss)).click();
@@ -230,30 +181,30 @@ public class Subscription {
         driver.findElement(By.name(monthName)).sendKeys(formData.month);
         driver.findElement(By.name(yearName)).sendKeys(formData.year);
         driver.findElement(By.name(messageName)).sendKeys(formData.message);
-        new Actions(driver).scrollByAmount(0,400).perform();
+        new Actions(driver).scrollByAmount(0, 400).perform();
     }
 
-    public void submitFormPrint(){
+    public void submitFormPrint() {
         driver.findElement(By.xpath(submitBtnXpathP)).click();
     }
 
-    public void submitFormEmail(){
+    public void submitFormEmail() {
         driver.findElement(By.cssSelector(submitBtnCss)).click();
     }
 
-    public void validateDataPrint(String expectedResultPrint){
+    public void validateDataPrint(String expectedResultPrint) {
         String actualStatus = driver.findElement(By.cssSelector(successStatusP)).getText();
-        softAssert.assertEquals(actualStatus,expectedResultPrint, "Response result doesn't met, test failed!");
+        softAssert.assertEquals(actualStatus, expectedResultPrint, "Response result doesn't met, test failed!");
         softAssert.assertAll();
     }
 
-    public boolean validateDataEmail(String expectedResultEmail){
+    public boolean validateDataEmail(String expectedResultEmail) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(successStatusClass)));
         String actualStatus = driver.findElement(By.cssSelector(successStatusClass)).getText();
-        softAssert.assertEquals(actualStatus,expectedResultEmail, "Response result doesn't met, test failed!");
-        softAssert.assertAll();
-        return true;
+
+        return actualStatus.equals(expectedResultEmail);
+        //TODO: Search for correct boolean value to decide test result
     }
 
     public boolean isEmailAlertPresent() {

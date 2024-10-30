@@ -2,12 +2,14 @@ package tests;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
-import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import config.BrowserConfig;
 import config.ScreenSizeConfig;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Test;
 import pages.Subscription;
 import utils.SendEmailReport;
 import utils.TestDataProvider;
@@ -29,29 +31,29 @@ public class EmailSubscriptionTest {
     private final Map<String, ExtentTest> siteMap = new HashMap<>();
     private final Map<String, ExtentTest> browserMap = new HashMap<>();
     private final Map<String, ExtentTest> resolutionMap = new HashMap<>();
-    private List<ExtentTest> scenarioTest = new ArrayList<>();
-
+    private List<ReportData> scenarioTest = new ArrayList<>();
     //TODO: Make the scenario test to Thread Local Safe
 
     @BeforeSuite(alwaysRun = true)
-    public void setupSuite(){
+    public void setupSuite() {
         System.out.println("Setting up the report");
         extent = new ExtentReports();
         sparkReporter = new ExtentSparkReporter("report/Spark.html");
         extent.attachReporter(sparkReporter);
     }
 
-    private ExtentTest createTestNodes(String site, String browser, String resolution, String scenario){
+    private ExtentTest createTestNodes(String site, String browser, String resolution, String scenario) {
         ExtentTest test = extent.createTest(site)
                 .createNode("Browser: " + browser)
                 .createNode("Resolution: " + resolution)
                 .createNode(scenario);
-        scenarioTest.add(test);
+        ReportData reportData = new ReportData(test, browser, site, resolution, scenario);
+        scenarioTest.add(reportData);
         return test;
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
-    void testEmailSubs01(String browser, String site, String resolution, String expectedResultEmail){
+    void testEmailSubs01(String browser, String site, String resolution, String expectedResultEmail) {
         ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Successful subscription with valid input");
 
         driver.set(BrowserConfig.getDriver(browser));
@@ -61,7 +63,13 @@ public class EmailSubscriptionTest {
         System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
         Subscription subscription = new Subscription(driver.get());
         subscription.clickEmailSubs();
-        subscription.emailFieldFill();
+
+        subscription.fillEmailField();
+        subscription.fillFirstNameField();
+        subscription.fillLastNameField();
+        subscription.fillCountryField();
+        subscription.clickCheckBoxField();
+
         subscription.submitFormEmail();
         subscription.validateDataEmail(expectedResultEmail);
         boolean success = subscription.validateDataEmail(expectedResultEmail);
@@ -83,15 +91,18 @@ public class EmailSubscriptionTest {
 
         System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
         Subscription subscription = new Subscription(driver.get());
-
         subscription.clickEmailSubs();
-        subscription.emailRed01();
+
+        subscription.fillEmailField();
+        subscription.fillCountryField();
+        subscription.clickCheckBoxField();
+
         subscription.submitFormEmail();
 
         boolean alertFNameDisplayed = subscription.isFirstNameAlertPresent();
         boolean alertLNameDisplayed = subscription.isLastnameAlertPresent();
 
-        if (alertFNameDisplayed && alertLNameDisplayed){
+        if (alertFNameDisplayed && alertLNameDisplayed) {
             test.pass("Test Succeed, form can't be submitted because first and last name are blank");
         } else {
             test.fail("Test failed because of the alert not presented");
@@ -99,7 +110,7 @@ public class EmailSubscriptionTest {
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
-    void testEmailSubs03(String browser, String site, String resolution, String expectedResultEmail){
+    void testEmailSubs03(String browser, String site, String resolution, String expectedResultEmail) {
         ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Subscription with a different country selection");
 
         driver.set(BrowserConfig.getDriver(browser));
@@ -108,9 +119,14 @@ public class EmailSubscriptionTest {
 
         System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
         Subscription subscription = new Subscription(driver.get());
-
         subscription.clickEmailSubs();
-        subscription.emailRed02();
+
+        subscription.fillEmailField();
+        subscription.fillFirstNameField();
+        subscription.fillLastNameField();
+        subscription.fillCountryField2();
+        subscription.clickCheckBoxField();
+
         subscription.submitFormEmail();
         subscription.validateDataEmail(expectedResultEmail);
 
@@ -124,7 +140,7 @@ public class EmailSubscriptionTest {
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
-    void testEmailSubs04(String browser, String site, String resolution, String expectedResultEmail){
+    void testEmailSubs04(String browser, String site, String resolution, String expectedResultEmail) {
         ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Subscription with an invalid email format");
 
         driver.set(BrowserConfig.getDriver(browser));
@@ -133,9 +149,14 @@ public class EmailSubscriptionTest {
 
         System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
         Subscription subscription = new Subscription(driver.get());
-
         subscription.clickEmailSubs();
-        subscription.emailRed03();
+
+        subscription.fillInvalidEmailField();
+        subscription.fillFirstNameField();
+        subscription.fillLastNameField();
+        subscription.fillCountryField2();
+        subscription.clickCheckBoxField();
+
         subscription.submitFormEmail();
 
         boolean isAlertDisplayed = subscription.isEmailAlertPresent();
@@ -148,7 +169,7 @@ public class EmailSubscriptionTest {
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
-    void testEmailSubs05(String browser, String site, String resolution, String expectedResultEmail){
+    void testEmailSubs05(String browser, String site, String resolution, String expectedResultEmail) {
         ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Subscription without checking the agreement checkbox");
 
         driver.set(BrowserConfig.getDriver(browser));
@@ -157,9 +178,13 @@ public class EmailSubscriptionTest {
 
         System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
         Subscription subscription = new Subscription(driver.get());
-
         subscription.clickEmailSubs();
-        subscription.emailRed04();
+
+        subscription.fillEmailField();
+        subscription.fillFirstNameField();
+        subscription.fillLastNameField();
+        subscription.fillCountryField();
+
         subscription.submitFormEmail();
 
         boolean isCheckboxAlertDisplayed = subscription.isCheckboxAlertPresent();
@@ -172,7 +197,7 @@ public class EmailSubscriptionTest {
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
-    void testEmailSubs06(String browser, String site, String resolution, String expectedResultEmail){
+    void testEmailSubs06(String browser, String site, String resolution, String expectedResultEmail) {
         ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Submission with blank email");
 
         driver.set(BrowserConfig.getDriver(browser));
@@ -181,14 +206,18 @@ public class EmailSubscriptionTest {
 
         System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
         Subscription subscription = new Subscription(driver.get());
-
         subscription.clickEmailSubs();
-        subscription.emailRed05();
+
+        subscription.fillFirstNameField();
+        subscription.fillLastNameField();
+        subscription.fillCountryField();
+        subscription.clickCheckBoxField();
+
         subscription.submitFormEmail();
 
         boolean isAlertDisplayed = subscription.isEmailAlertPresent();
 
-        if (isAlertDisplayed){
+        if (isAlertDisplayed) {
             test.pass("Test Succeed, form can't be submitted because email field are blank.");
         } else {
             test.fail("Test failed because of the alert not presented.");
@@ -196,7 +225,7 @@ public class EmailSubscriptionTest {
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
-    void testEmailSubs07(String browser, String site, String resolution, String expectedResultEmail){
+    void testEmailSubs07(String browser, String site, String resolution, String expectedResultEmail) {
         ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Submission without country selection");
 
         driver.set(BrowserConfig.getDriver(browser));
@@ -205,15 +234,18 @@ public class EmailSubscriptionTest {
 
         System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
         Subscription subscription = new Subscription(driver.get());
-
         subscription.clickEmailSubs();
 
-        subscription.emailRed06();
+        subscription.fillEmailField();
+        subscription.fillFirstNameField();
+        subscription.fillLastNameField();
+        subscription.clickCheckBoxField();
+
         subscription.submitFormEmail();
 
         boolean isAlertDisplayed = subscription.isCountryAlertPresent();
 
-        if (isAlertDisplayed){
+        if (isAlertDisplayed) {
             test.pass("Test Succeed, form can't be submitted without fill the country field.");
         } else {
             test.fail("Test failed because of the alert not presented.");
@@ -222,7 +254,7 @@ public class EmailSubscriptionTest {
 
     //Attempt to submit without filling in any fields
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
-    void testEmailSubs08(String browser, String site, String resolution, String expectedResultEmail){
+    void testEmailSubs08(String browser, String site, String resolution, String expectedResultEmail) {
         ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Attempt to submit without filling in any fields");
 
         driver.set(BrowserConfig.getDriver(browser));
@@ -241,7 +273,7 @@ public class EmailSubscriptionTest {
         boolean alertCheckboxDisplayed = subscription.isCheckboxAlertPresent();
         boolean alertCountryDisplayed = subscription.isCountryAlertPresent();
 
-        if (alertEmailDisplayed && alertFNameDisplayed && alertLNameDisplayed && alertCheckboxDisplayed && alertCountryDisplayed){
+        if (alertEmailDisplayed && alertFNameDisplayed && alertLNameDisplayed && alertCheckboxDisplayed && alertCountryDisplayed) {
             test.pass("Test Succeed, can't submit blank form.");
         } else {
             test.fail("Test failed because of the alert not presented.");
@@ -249,7 +281,7 @@ public class EmailSubscriptionTest {
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
-    void testEmailSubs09(String browser, String site, String resolution, String expectedResultEmail){
+    void testEmailSubs09(String browser, String site, String resolution, String expectedResultEmail) {
         ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Subscription with extra long information");
 
         driver.set(BrowserConfig.getDriver(browser));
@@ -258,30 +290,37 @@ public class EmailSubscriptionTest {
 
         System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
         Subscription subscription = new Subscription(driver.get());
-
         subscription.clickEmailSubs();
-        subscription.emailRed07();
+
+        subscription.fillEmailFieldDummy();
+        subscription.fillLongFirstNameField();
+        subscription.fillLongLastNameField();
+        subscription.fillCountryField();
+        subscription.clickCheckBoxField();
+
         subscription.submitFormEmail();
         subscription.validateDataEmail(expectedResultEmail);
-        boolean success = subscription.validateDataEmail(expectedResultEmail);
 
+        boolean success = subscription.validateDataEmail(expectedResultEmail);
         if (success) {
-            test.pass("Subscription with valid email was successful.");
+            test.pass("Subscription with extra long information was successful.");
         } else {
-            test.fail("Subscription with valid email failed.");
+            test.fail("Subscription with extra long information failed.");
         }
     }
 
     //browser not closing after test
     @AfterMethod(alwaysRun = true)
-    public void tearDown(){
+    public void tearDown() {
         System.out.println("Tear down method has been executed");
-        driver.get().close();
-        driver.remove();
+        if (driver != null) {
+            driver.get().close();
+            driver.remove();
+        }
     }
 
     @AfterSuite(alwaysRun = true)
-    public void endTest()throws MessagingException, IOException{
+    public void endTest() throws MessagingException, IOException {
         System.out.println("Email sending report has been executed");
         extent.flush();
         String reportPath = "report/Spark.html";
