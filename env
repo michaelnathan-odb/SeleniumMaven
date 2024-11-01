@@ -1,0 +1,11 @@
+# SMTP configuration
+mail.smtp.host=<your_smtp_host>
+mail.smtp.port=<your_smtp_port>
+mail.smtp.auth=true
+mail.smtp.starttls.enable=true
+
+# Email Setting
+mail.from=<set_the_email_sender>
+mail.to=<set_the_email_receiver>
+mail.subject=<set_email_subject>
+mail.attachmentPath=<your_report_file_path>

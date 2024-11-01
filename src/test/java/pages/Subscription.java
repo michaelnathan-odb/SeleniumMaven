@@ -133,16 +133,6 @@ public class Subscription {
         driver.findElement(By.name(checkboxName)).click();
     }
 
-    //Successful subscription with valid input
-    public void emailFieldFill() {
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        driver.findElement(By.name(emailName)).sendKeys(formData.email);
-        driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
-        driver.findElement(By.name(lastName)).sendKeys(formData.lastName);
-        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
-        driver.findElement(By.name(checkboxName)).click();
-    }
-
     public void clickPrintSubs() {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.findElement(By.xpath(closeCookie)).click();
@@ -198,13 +188,39 @@ public class Subscription {
         softAssert.assertAll();
     }
 
+    public boolean isElementVisible(String cssLocator) {
+        try {
+            return driver.findElement(By.cssSelector(cssLocator)).isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false; // Return false if the element is not found
+        }
+    }
+
     public boolean validateDataEmail(String expectedResultEmail) {
+        // Use WebDriverWait for better handling of dynamic content
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+        // First, check if the element is visible
+        if (!isElementVisible(successStatusClass)) {
+            System.out.println("Element is not visible or does not exist.");
+            return false; // Return false if the element is not visible
+        }
+
+        // Now we can safely wait for the visibility and retrieve the text
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(successStatusClass)));
         String actualStatus = driver.findElement(By.cssSelector(successStatusClass)).getText();
 
+        // Check if actual status is empty
+        if (actualStatus.isEmpty()) {
+            System.out.println("Actual result is empty.");
+            return false; // Return false if actual status is empty
+        }
+
+        // Perform the assertion
+        softAssert.assertEquals(actualStatus, expectedResultEmail, "Response result doesn't match, test failed!");
+
+        // Return true if everything checks out
         return actualStatus.equals(expectedResultEmail);
-        //TODO: Search for correct boolean value to decide test result
     }
 
     public boolean isEmailAlertPresent() {
