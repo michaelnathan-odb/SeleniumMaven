@@ -46,6 +46,12 @@
             <artifactId>javax.mail</artifactId>
             <version>1.6.2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/io.github.cdimascio/dotenv-java -->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>dotenv-java</artifactId>
+            <version>3.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -56,8 +62,7 @@
                 <version>3.5.1</version> <!-- Use a suitable version -->
                 <configuration>
                     <parallel>methods</parallel>
-                    <threadCount>5</threadCount>
-
+                    <threadCount>4</threadCount>
                 </configuration>
             </plugin>
         </plugins>

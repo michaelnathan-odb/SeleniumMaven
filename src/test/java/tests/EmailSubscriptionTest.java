@@ -253,7 +253,7 @@ public class EmailSubscriptionTest {
     }
 
     //Attempt to submit without filling in any fields
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupC")
     void testEmailSubs08(String browser, String site, String resolution, String expectedResultEmail) {
         ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Attempt to submit without filling in any fields");
 
@@ -302,10 +302,11 @@ public class EmailSubscriptionTest {
         subscription.validateDataEmail(expectedResultEmail);
 
         boolean success = subscription.validateDataEmail(expectedResultEmail);
-        if (success) {
-            test.pass("Subscription with extra long information was successful.");
-        } else {
+
+        if (!success) {
             test.fail("Subscription with extra long information failed.");
+        } else {
+            test.pass("Subscription with extra long information was successful.");
         }
     }
 

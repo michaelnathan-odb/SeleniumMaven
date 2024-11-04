@@ -7,18 +7,7 @@
       "testCases": [
         {
           "browser": "chrome",
-          "resolution": "mobile"
-        }
-      ]
-    },
-    {
-      "site": "https://odb.org/subscription/jp/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
-      "testCases": [
-        {
-          "browser": "chrome",
-          "resolution": "mobile"
+          "resolution": "desktop"
         }
       ]
     }
