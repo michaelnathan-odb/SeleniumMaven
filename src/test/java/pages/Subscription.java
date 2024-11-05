@@ -1,5 +1,7 @@
 package pages;
 
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -11,13 +13,13 @@ import userInfo.FormData;
 import java.time.Duration;
 
 public class Subscription {
-    private final WebDriver driver;
-
-    SoftAssert softAssert = new SoftAssert();
-
     public Subscription(WebDriver _driver) {
         driver = _driver;
     }
+
+    private final WebDriver driver;
+
+    SoftAssert softAssert = new SoftAssert();
 
     private static final FormData formData = new FormData();
 
@@ -76,9 +78,11 @@ public class Subscription {
     //<div class="wpcf7-response-output alert" style="display: block;">Thank you for your message. It has been sent.</div>
 
     public void clickEmailSubs() {
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(closeCookie)));
 
-        if (!(driver instanceof FirefoxDriver) && !driver.findElements(By.cssSelector(closeCookie)).isEmpty()) {
+        boolean cookiesElement = !driver.findElements(By.cssSelector(closeCookie)).isEmpty();
+        if (cookiesElement) {
             driver.findElement(By.cssSelector(closeCookie)).click();
         }
 
@@ -89,7 +93,6 @@ public class Subscription {
         if (driver instanceof FirefoxDriver) {
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", scroll);
         }
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         new Actions(driver).scrollToElement(scroll).perform();
     }
 
