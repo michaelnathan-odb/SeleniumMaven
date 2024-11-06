@@ -1,7 +1,5 @@
 package pages;
 
-import com.aventstack.extentreports.ExtentTest;
-import com.aventstack.extentreports.Status;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -13,8 +11,8 @@ import userInfo.FormData;
 import java.time.Duration;
 
 public class Subscription {
-    public Subscription(WebDriver _driver) {
-        driver = _driver;
+    public Subscription(WebDriver driver) {
+        this.driver = driver;
     }
 
     private final WebDriver driver;
@@ -78,7 +76,7 @@ public class Subscription {
     //<div class="wpcf7-response-output alert" style="display: block;">Thank you for your message. It has been sent.</div>
 
     public void clickEmailSubs() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(closeCookie)));
 
         boolean cookiesElement = !driver.findElements(By.cssSelector(closeCookie)).isEmpty();
@@ -163,7 +161,6 @@ public class Subscription {
         }
 
         new Actions(driver).scrollToElement(scroll).perform();
-        Thread.sleep(1000);
         driver.findElement(By.xpath(genderXpath)).click();
         driver.findElement(By.name(homePhoneName)).sendKeys(formData.homePhone);
         driver.findElement(By.name(officePhoneName)).sendKeys(formData.officePhone);
