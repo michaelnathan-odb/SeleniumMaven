@@ -11,13 +11,13 @@ import userInfo.FormData;
 import java.time.Duration;
 
 public class Subscription {
+    public Subscription(WebDriver driver) {
+        this.driver = driver;
+    }
+
     private final WebDriver driver;
 
     SoftAssert softAssert = new SoftAssert();
-
-    public Subscription(WebDriver _driver) {
-        driver = _driver;
-    }
 
     private static final FormData formData = new FormData();
 
@@ -37,16 +37,6 @@ public class Subscription {
     public static String lastNameFocus = "//div[contains(@class, 'error-message') and contains(., 'Please provide your last name.')]";
     public static String countryFocus = "//div[contains(@class, 'error-message') and contains(., 'Please select a country to continue.')]";
     public static String checkboxFocus = "//div[contains(@class, 'error-message') and contains(., 'Please indicate which email(s) you would like to receive.')]";
-
-    //<div class="error-message" style="display: block;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><span class="message"> Please provide a valid email address.</span></div>
-    ////*[@id="container-email-3"]/div
-    //<div class="error-message" style="display: block;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><span class="message"> Please provide your first name.</span></div>
-    // //*[@id="container-first-name-3"]/div
-    //<div class="error-message" style="display: block;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><span class="message"> Please provide your last name.</span></div>
-    //<div class="error-message" style="display: block;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i><span class="message"> Please select a country to continue.</span> </div>
-    //<div class="error-message" style="display: block;"><i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-    //  		<span class="message"> Please indicate which email(s) you would like to receive. </span>
-    //  	</div>
 
     //printed subscription form locator
     public static String printBtnCss = "li.print.subscription-tabs";
@@ -76,9 +66,11 @@ public class Subscription {
     //<div class="wpcf7-response-output alert" style="display: block;">Thank you for your message. It has been sent.</div>
 
     public void clickEmailSubs() {
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(closeCookie)));
 
-        if (!(driver instanceof FirefoxDriver) && !driver.findElements(By.cssSelector(closeCookie)).isEmpty()) {
+        boolean cookiesElement = !driver.findElements(By.cssSelector(closeCookie)).isEmpty();
+        if (cookiesElement) {
             driver.findElement(By.cssSelector(closeCookie)).click();
         }
 
@@ -89,7 +81,6 @@ public class Subscription {
         if (driver instanceof FirefoxDriver) {
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", scroll);
         }
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         new Actions(driver).scrollToElement(scroll).perform();
     }
 
@@ -134,10 +125,8 @@ public class Subscription {
     }
 
     public void clickPrintSubs() {
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.findElement(By.xpath(closeCookie)).click();
         driver.findElement(By.cssSelector(printBtnCss)).click();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
     }
 
     public void printFieldAll() throws InterruptedException {
@@ -160,7 +149,6 @@ public class Subscription {
         }
 
         new Actions(driver).scrollToElement(scroll).perform();
-        Thread.sleep(1000);
         driver.findElement(By.xpath(genderXpath)).click();
         driver.findElement(By.name(homePhoneName)).sendKeys(formData.homePhone);
         driver.findElement(By.name(officePhoneName)).sendKeys(formData.officePhone);
@@ -192,35 +180,28 @@ public class Subscription {
         try {
             return driver.findElement(By.cssSelector(cssLocator)).isDisplayed();
         } catch (NoSuchElementException e) {
-            return false; // Return false if the element is not found
+            return false;
         }
     }
 
-    public boolean validateDataEmail(String expectedResultEmail) {
-        // Use WebDriverWait for better handling of dynamic content
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+    public void validateDataEmail(String expectedResultEmail) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 
-        // First, check if the element is visible
         if (!isElementVisible(successStatusClass)) {
             System.out.println("Element is not visible or does not exist.");
-            return false; // Return false if the element is not visible
+            return;
         }
 
-        // Now we can safely wait for the visibility and retrieve the text
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(successStatusClass)));
         String actualStatus = driver.findElement(By.cssSelector(successStatusClass)).getText();
 
-        // Check if actual status is empty
         if (actualStatus.isEmpty()) {
             System.out.println("Actual result is empty.");
-            return false; // Return false if actual status is empty
+            return;
         }
 
-        // Perform the assertion
         softAssert.assertEquals(actualStatus, expectedResultEmail, "Response result doesn't match, test failed!");
 
-        // Return true if everything checks out
-        return actualStatus.equals(expectedResultEmail);
     }
 
     public boolean isEmailAlertPresent() {

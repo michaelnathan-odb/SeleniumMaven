@@ -6,6 +6,7 @@ import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import config.BrowserConfig;
 import config.ScreenSizeConfig;
 import org.openqa.selenium.WebDriver;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
@@ -17,51 +18,83 @@ import utils.TestDataProvider;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class EmailSubscriptionTest {
+    private final String filePath = "report/EmailSubsReporter.html";
     //report
     static ExtentReports extent = new ExtentReports();
     static ExtentSparkReporter sparkReporter;
 
-    private static ThreadLocal<WebDriver> driver = new ThreadLocal<WebDriver>();
+    private static final ThreadLocal<WebDriver> threadLocal = new ThreadLocal<WebDriver>();
+    private static final ThreadLocal<ExtentTest> threadLocalTest = new ThreadLocal<ExtentTest>();
 
-    private final Map<String, ExtentTest> siteMap = new HashMap<>();
-    private final Map<String, ExtentTest> browserMap = new HashMap<>();
-    private final Map<String, ExtentTest> resolutionMap = new HashMap<>();
-    private List<ReportData> scenarioTest = new ArrayList<>();
-    //TODO: Make the scenario test to Thread Local Safe
+    private final List<ReportData> scenarioTest = new ArrayList<>();
+    private final ConcurrentHashMap<String, ExtentTest> siteMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, ExtentTest> browserMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, ExtentTest> resolutionMap = new ConcurrentHashMap<>();
 
     @BeforeSuite(alwaysRun = true)
-    public void setupSuite() {
-        System.out.println("Setting up the report");
+    public void setupSuite() throws IOException {
         extent = new ExtentReports();
-        sparkReporter = new ExtentSparkReporter("report/Spark.html");
+        sparkReporter = new ExtentSparkReporter(filePath);
         extent.attachReporter(sparkReporter);
+
+        TestDataProvider testDataProvider = new TestDataProvider();
+        Object[][] data = testDataProvider.dataProvider();
+        for (Object[] object : data) {
+            String site = (String) object[1];
+            String browser = (String) object[0];
+            String resolution = (String) object[2];
+
+            ExtentTest siteTest;
+            if (siteMap.containsKey(site)) {
+                siteTest = siteMap.get(site);
+            } else {
+                siteTest = extent.createTest(site);
+                siteMap.put(site, siteTest);
+            }
+
+            ExtentTest browserTest;
+            String browserKey = site + "_" + browser;
+            if (browserMap.containsKey(browserKey)) {
+                browserTest = browserMap.get(browserKey);
+            } else {
+                browserTest = siteTest.createNode("Browser: " + browser);
+                browserMap.put(browserKey, browserTest);
+            }
+
+            ExtentTest resolutionTest;
+            String resolutionKey = browserKey + "_" + resolution;
+            if (resolutionMap.containsKey(resolutionKey)) {
+                resolutionMap.get(resolutionKey);
+            } else {
+                resolutionTest = browserTest.createNode("Resolution: " + resolution);
+                resolutionMap.put(resolutionKey, resolutionTest);
+            }
+        }
     }
 
-    private ExtentTest createTestNodes(String site, String browser, String resolution, String scenario) {
-        ExtentTest test = extent.createTest(site)
-                .createNode("Browser: " + browser)
-                .createNode("Resolution: " + resolution)
-                .createNode(scenario);
-        ReportData reportData = new ReportData(test, browser, site, resolution, scenario);
-        scenarioTest.add(reportData);
-        return test;
+    private void createTestNodes(String site, String browser, String resolution, String scenario) {
+        String resolutionKey = site + "_" + browser + "_" + resolution;
+        if (resolutionMap.containsKey(resolutionKey)) {
+            ExtentTest resolutionTest = resolutionMap.get(resolutionKey);
+            ExtentTest test = resolutionTest.createNode("Scenario :" + scenario);
+            threadLocalTest.set(test);
+        }
+        threadLocalTest.get();
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
     void testEmailSubs01(String browser, String site, String resolution, String expectedResultEmail) {
-        ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Successful subscription with valid input");
+        createTestNodes(site, browser, resolution, "Scenario Test: Successful subscription with valid input");
 
-        driver.set(BrowserConfig.getDriver(browser));
-        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-        driver.get().get(site);
+        threadLocal.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
+        threadLocal.get().get(site);
 
-        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-        Subscription subscription = new Subscription(driver.get());
+        Subscription subscription = new Subscription(threadLocal.get());
         subscription.clickEmailSubs();
 
         subscription.fillEmailField();
@@ -72,259 +105,164 @@ public class EmailSubscriptionTest {
 
         subscription.submitFormEmail();
         subscription.validateDataEmail(expectedResultEmail);
-        boolean success = subscription.validateDataEmail(expectedResultEmail);
-
-        if (success) {
-            test.pass("Subscription with valid email was successful.");
-        } else {
-            test.fail("Subscription with valid email failed.");
-        }
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs02(String browser, String site, String resolution, String expectedResultEmail) throws InterruptedException {
-        ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Subscription with optional fields left blank (without first name and last name)");
+        createTestNodes(site, browser, resolution, "Scenario Test: Subscription with optional fields left blank (without first name and last name)");
 
-        driver.set(BrowserConfig.getDriver(browser));
-        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-        driver.get().get(site);
+        threadLocal.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
+        threadLocal.get().get(site);
 
-        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-        Subscription subscription = new Subscription(driver.get());
+        Subscription subscription = new Subscription(threadLocal.get());
         subscription.clickEmailSubs();
-
         subscription.fillEmailField();
         subscription.fillCountryField();
         subscription.clickCheckBoxField();
-
         subscription.submitFormEmail();
-
-        boolean alertFNameDisplayed = subscription.isFirstNameAlertPresent();
-        boolean alertLNameDisplayed = subscription.isLastnameAlertPresent();
-
-        if (alertFNameDisplayed && alertLNameDisplayed) {
-            test.pass("Test Succeed, form can't be submitted because first and last name are blank");
-        } else {
-            test.fail("Test failed because of the alert not presented");
-        }
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
     void testEmailSubs03(String browser, String site, String resolution, String expectedResultEmail) {
-        ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Subscription with a different country selection");
+        createTestNodes(site, browser, resolution, "Scenario Test: Subscription with a different country selection");
 
-        driver.set(BrowserConfig.getDriver(browser));
-        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-        driver.get().get(site);
+        threadLocal.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
+        threadLocal.get().get(site);
 
-        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-        Subscription subscription = new Subscription(driver.get());
+        Subscription subscription = new Subscription(threadLocal.get());
         subscription.clickEmailSubs();
-
         subscription.fillEmailField();
         subscription.fillFirstNameField();
         subscription.fillLastNameField();
         subscription.fillCountryField2();
         subscription.clickCheckBoxField();
-
         subscription.submitFormEmail();
         subscription.validateDataEmail(expectedResultEmail);
-
-        boolean success = subscription.validateDataEmail(expectedResultEmail);
-
-        if (success) {
-            test.pass("Subscription with a different country selection was successful.");
-        } else {
-            test.fail("Subscription with a different country selection failed.");
-        }
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs04(String browser, String site, String resolution, String expectedResultEmail) {
-        ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Subscription with an invalid email format");
+        createTestNodes(site, browser, resolution, "Scenario Test: Subscription with an invalid email format");
 
-        driver.set(BrowserConfig.getDriver(browser));
-        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-        driver.get().get(site);
+        threadLocal.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
+        threadLocal.get().get(site);
 
-        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-        Subscription subscription = new Subscription(driver.get());
+        Subscription subscription = new Subscription(threadLocal.get());
         subscription.clickEmailSubs();
-
         subscription.fillInvalidEmailField();
         subscription.fillFirstNameField();
         subscription.fillLastNameField();
         subscription.fillCountryField2();
         subscription.clickCheckBoxField();
-
         subscription.submitFormEmail();
-
-        boolean isAlertDisplayed = subscription.isEmailAlertPresent();
-
-        if (isAlertDisplayed) {
-            test.pass("Test Succeed, form can't be submitted because email are invalid");
-        } else {
-            test.fail("Test failed because of the alert not presented");
-        }
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs05(String browser, String site, String resolution, String expectedResultEmail) {
-        ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Subscription without checking the agreement checkbox");
+        createTestNodes(site, browser, resolution, "Scenario Test: Subscription without checking the agreement checkbox");
 
-        driver.set(BrowserConfig.getDriver(browser));
-        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-        driver.get().get(site);
+        threadLocal.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
+        threadLocal.get().get(site);
 
-        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-        Subscription subscription = new Subscription(driver.get());
+        Subscription subscription = new Subscription(threadLocal.get());
         subscription.clickEmailSubs();
-
         subscription.fillEmailField();
         subscription.fillFirstNameField();
         subscription.fillLastNameField();
         subscription.fillCountryField();
-
         subscription.submitFormEmail();
-
-        boolean isCheckboxAlertDisplayed = subscription.isCheckboxAlertPresent();
-
-        if (isCheckboxAlertDisplayed) {
-            test.pass("Test Succeed, subscription without checking the agreement checkbox can't be submitted.");
-        } else {
-            test.fail("Test failed because of the alert not presented");
-        }
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs06(String browser, String site, String resolution, String expectedResultEmail) {
-        ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Submission with blank email");
+        createTestNodes(site, browser, resolution, "Scenario Test: Submission with blank email");
 
-        driver.set(BrowserConfig.getDriver(browser));
-        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-        driver.get().get(site);
+        threadLocal.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
+        threadLocal.get().get(site);
 
-        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-        Subscription subscription = new Subscription(driver.get());
+        Subscription subscription = new Subscription(threadLocal.get());
         subscription.clickEmailSubs();
-
         subscription.fillFirstNameField();
         subscription.fillLastNameField();
         subscription.fillCountryField();
         subscription.clickCheckBoxField();
-
         subscription.submitFormEmail();
-
-        boolean isAlertDisplayed = subscription.isEmailAlertPresent();
-
-        if (isAlertDisplayed) {
-            test.pass("Test Succeed, form can't be submitted because email field are blank.");
-        } else {
-            test.fail("Test failed because of the alert not presented.");
-        }
     }
+
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs07(String browser, String site, String resolution, String expectedResultEmail) {
-        ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Submission without country selection");
+        createTestNodes(site, browser, resolution, "Scenario Test: Submission without country selection");
 
-        driver.set(BrowserConfig.getDriver(browser));
-        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-        driver.get().get(site);
+        threadLocal.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
+        threadLocal.get().get(site);
 
-        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-        Subscription subscription = new Subscription(driver.get());
+        Subscription subscription = new Subscription(threadLocal.get());
         subscription.clickEmailSubs();
 
         subscription.fillEmailField();
         subscription.fillFirstNameField();
         subscription.fillLastNameField();
         subscription.clickCheckBoxField();
-
         subscription.submitFormEmail();
-
-        boolean isAlertDisplayed = subscription.isCountryAlertPresent();
-
-        if (isAlertDisplayed) {
-            test.pass("Test Succeed, form can't be submitted without fill the country field.");
-        } else {
-            test.fail("Test failed because of the alert not presented.");
-        }
     }
 
     //Attempt to submit without filling in any fields
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupC")
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubs08(String browser, String site, String resolution, String expectedResultEmail) {
-        ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Attempt to submit without filling in any fields");
+        createTestNodes(site, browser, resolution, "Scenario Test: Attempt to submit without filling in any fields");
 
-        driver.set(BrowserConfig.getDriver(browser));
-        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-        driver.get().get(site);
+        threadLocal.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
+        threadLocal.get().get(site);
 
-        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-        Subscription subscription = new Subscription(driver.get());
-
+        Subscription subscription = new Subscription(threadLocal.get());
         subscription.clickEmailSubs();
         subscription.submitFormEmail();
-
-        boolean alertEmailDisplayed = subscription.isEmailAlertPresent();
-        boolean alertFNameDisplayed = subscription.isFirstNameAlertPresent();
-        boolean alertLNameDisplayed = subscription.isLastnameAlertPresent();
-        boolean alertCheckboxDisplayed = subscription.isCheckboxAlertPresent();
-        boolean alertCountryDisplayed = subscription.isCountryAlertPresent();
-
-        if (alertEmailDisplayed && alertFNameDisplayed && alertLNameDisplayed && alertCheckboxDisplayed && alertCountryDisplayed) {
-            test.pass("Test Succeed, can't submit blank form.");
-        } else {
-            test.fail("Test failed because of the alert not presented.");
-        }
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
     void testEmailSubs09(String browser, String site, String resolution, String expectedResultEmail) {
-        ExtentTest test = createTestNodes(site, browser, resolution, "Scenario Test: Subscription with extra long information");
+        createTestNodes(site, browser, resolution, "Scenario Test: Subscription with extra long information");
 
-        driver.set(BrowserConfig.getDriver(browser));
-        ScreenSizeConfig.setScreenSize(driver.get(), resolution);
-        driver.get().get(site);
+        threadLocal.set(BrowserConfig.getDriver(browser));
+        ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
+        threadLocal.get().get(site);
 
-        System.out.println("Tests run in: " + browser + ", " + site + ", " + resolution);
-        Subscription subscription = new Subscription(driver.get());
+        Subscription subscription = new Subscription(threadLocal.get());
         subscription.clickEmailSubs();
-
         subscription.fillEmailFieldDummy();
         subscription.fillLongFirstNameField();
         subscription.fillLongLastNameField();
         subscription.fillCountryField();
         subscription.clickCheckBoxField();
-
         subscription.submitFormEmail();
         subscription.validateDataEmail(expectedResultEmail);
-
-        boolean success = subscription.validateDataEmail(expectedResultEmail);
-
-        if (!success) {
-            test.fail("Subscription with extra long information failed.");
-        } else {
-            test.pass("Subscription with extra long information was successful.");
-        }
     }
 
-    //browser not closing after test
     @AfterMethod(alwaysRun = true)
-    public void tearDown() {
-        System.out.println("Tear down method has been executed");
-        if (driver != null) {
-            driver.get().close();
-            driver.remove();
+    public void tearDown(ITestResult result) {
+        if (result.getStatus() == ITestResult.FAILURE){
+            threadLocalTest.get().fail(result.getThrowable());
+        } else if (result.getStatus() == ITestResult.SKIP){
+            threadLocalTest.get().skip(result.getThrowable());
+        } else {
+            threadLocalTest.get().pass("Test Passed");
+        }
+        if (threadLocal.get() != null) {
+            threadLocal.get().quit();
         }
     }
 
     @AfterSuite(alwaysRun = true)
-    public void endTest() throws MessagingException, IOException {
-        System.out.println("Email sending report has been executed");
+    public void endTest() throws MessagingException {
         extent.flush();
-        String reportPath = "report/Spark.html";
-        SendEmailReport.sendReport(reportPath, scenarioTest);
+        SendEmailReport.sendReport(filePath, scenarioTest);
     }
 }

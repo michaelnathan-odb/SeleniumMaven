@@ -3,9 +3,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 report/*.html
-
+src/main/resources/testData*.json
 .env
-.gitignore
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
