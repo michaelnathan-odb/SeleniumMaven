@@ -3,14 +3,14 @@ package userInfo;
 
 public class FormData {
     public String email = "michael.nathan@odb.org";
-    public String emailDummy = "michael.nathan+1jfilawuhfawljkhfjwhfawuifhawuifhawuklfhwaklufhawuilhfawiluehfawuilfh@odb.org";
+    public String emailLong = "michael.nathan+1jfilawuhfawljkhfjwhfawuifhawuifhawuklfhwaklufhawuilhfawiluehfawuilfh@odb.org";
     public String emailInvalid = "michael.nathan.odb.org";
     public String firstName = "Michael";
-    public String firstNameDummy = "Michaelasdjbaukdhauidhqwouidhasukhdaukdhakuhdkauhdkaudha1";
+    public String firstNameLong = "Michaelasdjbaukdhauidhqwouidhasukhdaukdhakuhdkauhdkaudha1";
     public String lastName = "Testing";
-    public String lastNameDummy = "Testingdajdhauidghquidhquidhqiudhqwuidhqd";
+    public String lastNameLong = "Testingdajdhauidghquidhquidhqiudhqwuidhqd";
     public String country = "Indonesia";
-    public String country01 = "Japan";
+    public String differentCountry = "Japan";
     public String postCode = "8372917";
     public String prefecture = "Prefecture Testing";
     public String district = "District Testing";
