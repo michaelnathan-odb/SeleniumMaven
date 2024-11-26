@@ -32,11 +32,11 @@ public class Subscription {
     public static String checkboxName = "list[]";
     public static String submitBtnCss = "button.validation-btn";
     public static String successStatusClass = "div.response.text-center.alert.alert-success";
-    public static String emailFocus = "//div[contains(@class, 'error-message') and contains(., 'Please provide a valid email address.')]";
-    public static String firstNameFocus = "//div[contains(@class, 'error-message') and contains(., 'Please provide your first name.')]";
-    public static String lastNameFocus = "//div[contains(@class, 'error-message') and contains(., 'Please provide your last name.')]";
-    public static String countryFocus = "//div[contains(@class, 'error-message') and contains(., 'Please select a country to continue.')]";
-    public static String checkboxFocus = "//div[contains(@class, 'error-message') and contains(., 'Please indicate which email(s) you would like to receive.')]";
+    public static String emailAlert = "//div[contains(@class, 'error-message') and contains(., 'Please provide a valid email address.')]";
+    public static String firstNameAlert = "//div[contains(@class, 'error-message') and contains(., 'Please provide your first name.')]";
+    public static String lastNameAlert = "//div[contains(@class, 'error-message') and contains(., 'Please provide your last name.')]";
+    public static String countryAlert = "//div[contains(@class, 'error-message') and contains(., 'Please select a country to continue.')]";
+    public static String checkboxAlert = "//div[contains(@class, 'error-message') and contains(., 'Please indicate which email(s) you would like to receive.')]";
 
     //printed subscription form locator
     public static String printBtnCss = "li.print.subscription-tabs";
@@ -89,7 +89,7 @@ public class Subscription {
     }
 
     public void fillEmailFieldDummy() {
-        driver.findElement(By.name(emailName)).sendKeys(formData.emailDummy);
+        driver.findElement(By.name(emailName)).sendKeys(formData.emailLong);
     }
 
     public void fillInvalidEmailField() {
@@ -101,7 +101,7 @@ public class Subscription {
     }
 
     public void fillLongFirstNameField() {
-        driver.findElement(By.name(firstName)).sendKeys(formData.firstNameDummy);
+        driver.findElement(By.name(firstName)).sendKeys(formData.firstNameLong);
     }
 
     public void fillLastNameField() {
@@ -109,15 +109,15 @@ public class Subscription {
     }
 
     public void fillLongLastNameField() {
-        driver.findElement(By.name(lastName)).sendKeys(formData.lastNameDummy);
+        driver.findElement(By.name(lastName)).sendKeys(formData.lastNameLong);
     }
 
     public void fillCountryField() {
         driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
     }
 
-    public void fillCountryField2() {
-        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country01);
+    public void fillDifferentCountryField() {
+        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.differentCountry);
     }
 
     public void clickCheckBoxField() {
@@ -170,13 +170,13 @@ public class Subscription {
         driver.findElement(By.cssSelector(submitBtnCss)).click();
     }
 
-    public void validateDataPrint(String expectedResultPrint) {
+    public void validateSuccessMessagePrinted(String expectedResultPrint) {
         String actualStatus = driver.findElement(By.cssSelector(successStatusP)).getText();
         softAssert.assertEquals(actualStatus, expectedResultPrint, "Response result doesn't met, test failed!");
         softAssert.assertAll();
     }
 
-    public boolean isElementVisible(String cssLocator) {
+    public boolean isSuccessMessageVisible(String cssLocator) {
         try {
             return driver.findElement(By.cssSelector(cssLocator)).isDisplayed();
         } catch (NoSuchElementException e) {
@@ -184,10 +184,10 @@ public class Subscription {
         }
     }
 
-    public void validateDataEmail(String expectedResultEmail) {
+    public void validateSuccessMessageEmail(String expectedResultEmail) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 
-        if (!isElementVisible(successStatusClass)) {
+        if (!isSuccessMessageVisible(successStatusClass)) {
             System.out.println("Element is not visible or does not exist.");
             return;
         }
@@ -199,18 +199,16 @@ public class Subscription {
             System.out.println("Actual result is empty.");
             return;
         }
-
         softAssert.assertEquals(actualStatus, expectedResultEmail, "Response result doesn't match, test failed!");
-
     }
 
     public boolean isEmailAlertPresent() {
-        return driver.findElement(By.xpath(emailFocus)).isDisplayed();
+        return driver.findElement(By.xpath(emailAlert)).isDisplayed();
     }
 
     public boolean isFirstNameAlertPresent() {
         try {
-            return driver.findElement(By.xpath(firstNameFocus)).isDisplayed();
+            return driver.findElement(By.xpath(firstNameAlert)).isDisplayed();
         } catch (NoSuchElementException e) {
             return false;
         }
@@ -218,7 +216,7 @@ public class Subscription {
 
     public boolean isLastnameAlertPresent() {
         try {
-            return driver.findElement(By.xpath(lastNameFocus)).isDisplayed();
+            return driver.findElement(By.xpath(lastNameAlert)).isDisplayed();
         } catch (NoSuchElementException e) {
             return false;
         }
@@ -226,7 +224,7 @@ public class Subscription {
 
     public boolean isCountryAlertPresent() {
         try {
-            return driver.findElement(By.xpath(countryFocus)).isDisplayed();
+            return driver.findElement(By.xpath(countryAlert)).isDisplayed();
         } catch (NoSuchElementException e) {
             return false;
         }
@@ -234,7 +232,7 @@ public class Subscription {
 
     public boolean isCheckboxAlertPresent() {
         try {
-            return driver.findElement(By.xpath(checkboxFocus)).isDisplayed();
+            return driver.findElement(By.xpath(checkboxAlert)).isDisplayed();
         } catch (NoSuchElementException e) {
             return false;
         }

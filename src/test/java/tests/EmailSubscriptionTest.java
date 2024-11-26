@@ -104,7 +104,7 @@ public class EmailSubscriptionTest {
         subscription.clickCheckBoxField();
 
         subscription.submitFormEmail();
-        subscription.validateDataEmail(expectedResultEmail);
+        subscription.validateSuccessMessageEmail(expectedResultEmail);
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
@@ -136,10 +136,10 @@ public class EmailSubscriptionTest {
         subscription.fillEmailField();
         subscription.fillFirstNameField();
         subscription.fillLastNameField();
-        subscription.fillCountryField2();
+        subscription.fillDifferentCountryField();
         subscription.clickCheckBoxField();
         subscription.submitFormEmail();
-        subscription.validateDataEmail(expectedResultEmail);
+        subscription.validateSuccessMessageEmail(expectedResultEmail);
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
@@ -155,7 +155,7 @@ public class EmailSubscriptionTest {
         subscription.fillInvalidEmailField();
         subscription.fillFirstNameField();
         subscription.fillLastNameField();
-        subscription.fillCountryField2();
+        subscription.fillDifferentCountryField();
         subscription.clickCheckBoxField();
         subscription.submitFormEmail();
     }
@@ -243,7 +243,7 @@ public class EmailSubscriptionTest {
         subscription.fillCountryField();
         subscription.clickCheckBoxField();
         subscription.submitFormEmail();
-        subscription.validateDataEmail(expectedResultEmail);
+        subscription.validateSuccessMessageEmail(expectedResultEmail);
     }
 
     @AfterMethod(alwaysRun = true)

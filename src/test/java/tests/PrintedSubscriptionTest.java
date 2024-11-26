@@ -23,7 +23,7 @@ public class PrintedSubscriptionTest {
         subscription.printFieldAll();
         subscription.submitFormPrint();
         Thread.sleep(10000);
-        subscription.validateDataPrint(expectedResultPrint);
+        subscription.validateSuccessMessagePrinted(expectedResultPrint);
     }
 
     @AfterMethod
