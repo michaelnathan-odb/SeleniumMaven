@@ -121,6 +121,8 @@ public class EmailSubscriptionTest {
         subscription.fillCountryField();
         subscription.clickCheckBoxField();
         subscription.submitFormEmail();
+        subscription.isFirstNameAlertPresent();
+        subscription.isLastNameAlertPresent();
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
@@ -158,6 +160,7 @@ public class EmailSubscriptionTest {
         subscription.fillDifferentCountryField();
         subscription.clickCheckBoxField();
         subscription.submitFormEmail();
+        subscription.isEmailAlertPresent();
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
@@ -175,6 +178,7 @@ public class EmailSubscriptionTest {
         subscription.fillLastNameField();
         subscription.fillCountryField();
         subscription.submitFormEmail();
+        subscription.isCheckboxAlertPresent();
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
@@ -192,6 +196,7 @@ public class EmailSubscriptionTest {
         subscription.fillCountryField();
         subscription.clickCheckBoxField();
         subscription.submitFormEmail();
+        subscription.isEmailAlertPresent();
     }
 
 
@@ -211,6 +216,7 @@ public class EmailSubscriptionTest {
         subscription.fillLastNameField();
         subscription.clickCheckBoxField();
         subscription.submitFormEmail();
+        subscription.isCountryAlertPresent();
     }
 
     //Attempt to submit without filling in any fields
@@ -225,6 +231,11 @@ public class EmailSubscriptionTest {
         Subscription subscription = new Subscription(threadLocal.get());
         subscription.clickEmailSubs();
         subscription.submitFormEmail();
+        subscription.isEmailAlertPresent();
+        subscription.isFirstNameAlertPresent();
+        subscription.isLastNameAlertPresent();
+        subscription.isCountryAlertPresent();
+        subscription.isCheckboxAlertPresent();
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
