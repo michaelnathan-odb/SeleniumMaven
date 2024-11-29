@@ -259,12 +259,14 @@ public class EmailSubscriptionTest {
 
     @AfterMethod(alwaysRun = true)
     public void tearDown(ITestResult result) {
-        if (result.getStatus() == ITestResult.FAILURE){
-            threadLocalTest.get().fail(result.getThrowable());
-        } else if (result.getStatus() == ITestResult.SKIP){
-            threadLocalTest.get().skip(result.getThrowable());
-        } else {
-            threadLocalTest.get().pass("Test Passed");
+        if (threadLocalTest.get() != null) {
+            if (result.getStatus() == ITestResult.FAILURE) {
+                threadLocalTest.get().fail(result.getThrowable());
+            } else if (result.getStatus() == ITestResult.SKIP) {
+                threadLocalTest.get().skip(result.getThrowable());
+            } else {
+                threadLocalTest.get().pass("Test Passed");
+            }
         }
         if (threadLocal.get() != null) {
             threadLocal.get().quit();

@@ -200,10 +200,10 @@ public class Subscription {
 
     public void validateSuccessMessageEmail(String expectedResultEmail) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        WebElement successMessageElement = driver.findElement(By.cssSelector(successStatusClass));
-        wait.until(ExpectedConditions.visibilityOf(successMessageElement));
-        Assert.assertTrue(successMessageElement.isDisplayed());
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(successStatusClass)));
 
+        WebElement successMessageElement = driver.findElement(By.cssSelector(successStatusClass));
+        Assert.assertTrue(successMessageElement.isDisplayed());
         String actualStatus = successMessageElement.getText();
         Assert.assertEquals(actualStatus, expectedResultEmail, "Response result doesn't match, test failed!");
     }
