@@ -7,6 +7,8 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 public class BrowserConfig {
     public static WebDriver getDriver(String browser) {
@@ -18,7 +20,9 @@ public class BrowserConfig {
             driver = new ChromeDriver(options);
         } else if ("firefox".equalsIgnoreCase(browser)) {
             FirefoxOptions options = new FirefoxOptions();
+            //TODO: Search how to set binary for linux
             options.setBinary("C:/Program Files/Mozilla Firefox/firefox.exe").addArguments("--headless");
+            options.addArguments("-private");
             System.setProperty("webdriver.gecko.driver", "src/main/resources/driver/geckodriver.exe");
             driver = new FirefoxDriver(options);
         } else if ("edge".equalsIgnoreCase(browser)) {

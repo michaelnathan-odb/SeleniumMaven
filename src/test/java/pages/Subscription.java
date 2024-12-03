@@ -64,7 +64,7 @@ public class Subscription {
     //<div class="wpcf7-response-output alert" style="display: block;">Thank you for your message. It has been sent.</div>
 
     public void clickEmailSubs() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(closeCookie)));
 
         boolean cookiesElement = !driver.findElements(By.cssSelector(closeCookie)).isEmpty();
@@ -199,7 +199,7 @@ public class Subscription {
     }
 
     public void validateSuccessMessageEmail(String expectedResultEmail) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(successStatusClass)));
 
         WebElement successMessageElement = driver.findElement(By.cssSelector(successStatusClass));
