@@ -9,6 +9,7 @@ This project automates testing for subscription forms across multiple regional w
 - [About the Project](#about-the-project)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
+- [Pre-requisites](#prerequisites)
 - [Setup Instructions](#setup-instructions)
 - [Usage](#usage)
 - [Improvement Needs](#improvement-needs)
@@ -28,9 +29,9 @@ This project automates testing for subscription forms across multiple regional w
 - **Reporting Tool**: ExtentReports (Spark Reporter)
 - **Data Handling**: JSON
 
-## Setup Instructions
-### Pre-requisites
-Ensure the following tools are installed on your system:
+## **Prerequisites**
+Before setting up and running this project, ensure the following requirements are met:
+### **1. Install Java and Maven**
 - **Java Development Kit (JDK)** (Version 11 or higher, I'm using version 23) 
   - [Download](https://www.oracle.com/java/technologies/downloads/#java11?er=221886)
   - Verify Installation
@@ -44,6 +45,33 @@ Ensure the following tools are installed on your system:
     mvn -version
     ```
 
+### **2. Add Browsers to the Environment Variable Path**
+- Ensure the browser(s) you plan to use for testing (e.g., Chrome, Firefox, Edge) are installed on your system.
+- Add the browser executables to your system's Environment Variable `PATH` to allow the project to locate them easily:
+  - **For Windows**:
+    1. Open System Properties → Advanced → Environment Variables.
+    2. Under "System Variables," find `PATH` and click "Edit."
+    3. Add the path to the browser executable (e.g., `C:\Program Files\Google\Chrome\Application\`).
+  - **For macOS/Linux**:
+    Add the browser path to your shell configuration file (e.g., `.bashrc`, `.zshrc`):
+    ```bash
+    export PATH=$PATH:/path/to/browser
+    ```
+
+### **3. Download and Configure WebDrivers**
+- Download the appropriate WebDriver for the browser and version you intend to use:
+  - [ChromeDriver](https://googlechromelabs.github.io/chrome-for-testing/) for Google Chrome
+  - [GeckoDriver](https://github.com/mozilla/geckodriver/releases) for Firefox
+  - [Edge WebDriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/) for Microsoft Edge
+
+- **Place the WebDriver**:  
+  Copy the downloaded WebDriver executables into the `src/main/resources/driver/` directory of the project.
+
+- **If using a different operating system**:  
+  Ensure you download the WebDriver compatible with your OS (e.g., `.exe` for Windows, Unix binary for macOS/Linux) and update the `BrowserConfig` class in the project if necessary.
+
+
+## Setup Instructions
 ### Importing Project
 1. Clone the repository:
 ```bash
