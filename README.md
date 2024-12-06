@@ -36,13 +36,13 @@ Before setting up and running this project, ensure the following requirements ar
   - [Download](https://www.oracle.com/java/technologies/downloads/#java11?er=221886)
   - Verify Installation
     ```bash
-    java -version
+    java --version
     ```
 - Maven (Version 3.6 or higher, I'm using version 3.9.9)
   - [Download](https://maven.apache.org/install.html)
   - Verify Installation
     ```bash
-    mvn -version
+    mvn --version
     ```
 
 ### **2. Add Browsers to the Environment Variable Path**
