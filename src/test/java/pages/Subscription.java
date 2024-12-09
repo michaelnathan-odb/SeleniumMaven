@@ -77,13 +77,6 @@ public class Subscription {
         WebElement emailButtonElement = driver.findElement(By.cssSelector(emailBtnCss));
         Assert.assertTrue(emailButtonElement.isDisplayed());
         emailButtonElement.click();
-
-        WebElement scroll = driver.findElement(By.id(scrollToEmailId));
-        // Firefox-specific scroll to make sure the element is visible
-        if (driver instanceof FirefoxDriver) {
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", scroll);
-        }
-        new Actions(driver).scrollToElement(scroll).perform();
     }
 
     public void fillEmailField() {

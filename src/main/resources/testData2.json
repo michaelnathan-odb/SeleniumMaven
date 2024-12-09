@@ -1,13 +1,21 @@
 {
   "testData": [
     {
-      "site": "https://odb.org/subscription/au/",
+      "site": "https://odb.org/subscription/id/",
       "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
       "expectedResultPrint": "",
       "testCases": [
         {
+          "browser": "chrome",
+          "resolution": "tablet"
+        },
+        {
           "browser": "firefox",
-          "resolution": "desktop"
+          "resolution": "tablet"
+        },
+        {
+          "browser": "edge",
+          "resolution": "tablet"
         }
       ]
     }
