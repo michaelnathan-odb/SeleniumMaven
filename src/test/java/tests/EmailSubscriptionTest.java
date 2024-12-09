@@ -17,11 +17,14 @@ import utils.TestDataProvider;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class EmailSubscriptionTest {
+    //add timestamp for the filepath
     private final String filePath = "report/EmailSubsReporter.html";
     //report
     static ExtentReports extent = new ExtentReports();
@@ -87,7 +90,7 @@ public class EmailSubscriptionTest {
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
-    void testEmailSubsWithValidData(String browser, String site, String resolution, String expectedResultEmail) {
+    void testEmailSubsWithValidData(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Scenario Test: Successful subscription with valid input");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
@@ -107,8 +110,8 @@ public class EmailSubscriptionTest {
         subscription.validateSuccessMessageEmail(expectedResultEmail);
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
-    void testEmailSubsWithoutFirstAndLastName(String browser, String site, String resolution, String expectedResultEmail) throws InterruptedException {
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupC")
+    void testEmailSubsWithoutFirstAndLastName(String browser, String site, String resolution, String expectedResultEmail) throws InterruptedException, MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Scenario Test: Subscription with optional fields left blank (without first name and last name)");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
@@ -126,7 +129,7 @@ public class EmailSubscriptionTest {
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
-    void testEmailSubsWithDifferentCountry(String browser, String site, String resolution, String expectedResultEmail) {
+    void testEmailSubsWithDifferentCountry(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Scenario Test: Subscription with a different country selection");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
@@ -145,7 +148,7 @@ public class EmailSubscriptionTest {
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
-    void testEmailSubsWithInvalidEmail(String browser, String site, String resolution, String expectedResultEmail) {
+    void testEmailSubsWithInvalidEmail(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Scenario Test: Subscription with an invalid email format");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
@@ -164,7 +167,7 @@ public class EmailSubscriptionTest {
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
-    void testEmailSubsWithoutCheckAgreement(String browser, String site, String resolution, String expectedResultEmail) {
+    void testEmailSubsWithoutCheckAgreement(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Scenario Test: Subscription without checking the agreement checkbox");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
@@ -182,7 +185,7 @@ public class EmailSubscriptionTest {
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
-    void testEmailSubsWithBlankEmail(String browser, String site, String resolution, String expectedResultEmail) {
+    void testEmailSubsWithBlankEmail(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Scenario Test: Submission with blank email");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
@@ -201,7 +204,7 @@ public class EmailSubscriptionTest {
 
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
-    void testEmailSubsWithoutCountrySelection(String browser, String site, String resolution, String expectedResultEmail) {
+    void testEmailSubsWithoutCountrySelection(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Scenario Test: Submission without country selection");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
@@ -221,7 +224,7 @@ public class EmailSubscriptionTest {
 
     //Attempt to submit without filling in any fields
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
-    void testEmailSubsWithoutFillAnyField(String browser, String site, String resolution, String expectedResultEmail) {
+    void testEmailSubsWithoutFillAnyField(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Scenario Test: Attempt to submit without filling in any fields");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
@@ -239,7 +242,7 @@ public class EmailSubscriptionTest {
     }
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
-    void testEmailSubsWithExtraLongData(String browser, String site, String resolution, String expectedResultEmail) {
+    void testEmailSubsWithExtraLongData(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Scenario Test: Subscription with extra long information");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
