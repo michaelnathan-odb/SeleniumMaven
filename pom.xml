@@ -62,7 +62,6 @@
                 <version>3.5.1</version> <!-- Use a suitable version -->
                 <configuration>
                     <parallel>classes</parallel>
-                    <useUnlimitedThreads>true</useUnlimitedThreads>
                     <threadCountClasses>4</threadCountClasses>
                 </configuration>
             </plugin>
