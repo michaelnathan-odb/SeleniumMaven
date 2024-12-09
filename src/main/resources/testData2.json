@@ -6,7 +6,7 @@
       "expectedResultPrint": "",
       "testCases": [
         {
-          "browser": "chrome",
+          "browser": "firefox",
           "resolution": "desktop"
         }
       ]

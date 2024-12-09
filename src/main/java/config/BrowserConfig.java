@@ -15,10 +15,11 @@ public class BrowserConfig {
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--headless=old");
             System.setProperty("webdriver.chrome.driver", "src/main/resources/driver/chromedriver.exe");
+            //make sure to WebDriver location applicable in other OS
             driver = new ChromeDriver(options);
         } else if ("firefox".equalsIgnoreCase(browser)) {
             FirefoxOptions options = new FirefoxOptions();
-            options.setBinary("C:/Program Files/Mozilla Firefox/firefox.exe").addArguments("--headless");
+            options.addArguments("-private").addArguments("--headless");
             System.setProperty("webdriver.gecko.driver", "src/main/resources/driver/geckodriver.exe");
             driver = new FirefoxDriver(options);
         } else if ("edge".equalsIgnoreCase(browser)) {

@@ -1,11 +1,12 @@
 package pages;
 
+import com.aventstack.extentreports.ExtentTest;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.asserts.SoftAssert;
+import org.testng.Assert;
 import userInfo.FormData;
 
 import java.time.Duration;
@@ -16,9 +17,6 @@ public class Subscription {
     }
 
     private final WebDriver driver;
-
-    SoftAssert softAssert = new SoftAssert();
-
     private static final FormData formData = new FormData();
 
     //email subscription form locator
@@ -66,17 +64,21 @@ public class Subscription {
     //<div class="wpcf7-response-output alert" style="display: block;">Thank you for your message. It has been sent.</div>
 
     public void clickEmailSubs() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(closeCookie)));
 
         boolean cookiesElement = !driver.findElements(By.cssSelector(closeCookie)).isEmpty();
         if (cookiesElement) {
-            driver.findElement(By.cssSelector(closeCookie)).click();
+            WebElement cookieElement = driver.findElement(By.cssSelector(closeCookie));
+            Assert.assertTrue(cookieElement.isDisplayed());
+            cookieElement.click();
         }
 
-        driver.findElement(By.cssSelector(emailBtnCss)).click();
-        WebElement scroll = driver.findElement(By.id(scrollToEmailId));
+        WebElement emailButtonElement = driver.findElement(By.cssSelector(emailBtnCss));
+        Assert.assertTrue(emailButtonElement.isDisplayed());
+        emailButtonElement.click();
 
+        WebElement scroll = driver.findElement(By.id(scrollToEmailId));
         // Firefox-specific scroll to make sure the element is visible
         if (driver instanceof FirefoxDriver) {
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", scroll);
@@ -85,43 +87,63 @@ public class Subscription {
     }
 
     public void fillEmailField() {
-        driver.findElement(By.name(emailName)).sendKeys(formData.email);
+        WebElement emailFieldElement = driver.findElement(By.name(emailName));
+        Assert.assertTrue(emailFieldElement.isDisplayed());
+        emailFieldElement.sendKeys(formData.email);
     }
 
     public void fillEmailFieldDummy() {
-        driver.findElement(By.name(emailName)).sendKeys(formData.emailLong);
+        WebElement emailFieldElement = driver.findElement(By.name(emailName));
+        Assert.assertTrue(emailFieldElement.isDisplayed());
+        emailFieldElement.sendKeys(formData.emailLong);
     }
 
     public void fillInvalidEmailField() {
-        driver.findElement(By.name(emailName)).sendKeys(formData.emailInvalid);
+        WebElement emailFieldElement = driver.findElement(By.name(emailName));
+        Assert.assertTrue(emailFieldElement.isDisplayed());
+        emailFieldElement.sendKeys(formData.emailInvalid);
     }
 
     public void fillFirstNameField() {
-        driver.findElement(By.name(firstName)).sendKeys(formData.firstName);
+        WebElement firstNameElement = driver.findElement(By.name(firstName));
+        Assert.assertTrue(firstNameElement.isDisplayed());
+        firstNameElement.sendKeys(formData.firstName);
     }
 
     public void fillLongFirstNameField() {
-        driver.findElement(By.name(firstName)).sendKeys(formData.firstNameLong);
+        WebElement firstNameElement = driver.findElement(By.name(firstName));
+        Assert.assertTrue(firstNameElement.isDisplayed());
+        firstNameElement.sendKeys(formData.firstNameLong);
     }
 
     public void fillLastNameField() {
-        driver.findElement(By.name(lastName)).sendKeys(formData.lastName);
+        WebElement lastNameElement = driver.findElement(By.name(lastName));
+        Assert.assertTrue(lastNameElement.isDisplayed());
+        lastNameElement.sendKeys(formData.lastName);
     }
 
     public void fillLongLastNameField() {
-        driver.findElement(By.name(lastName)).sendKeys(formData.lastNameLong);
+        WebElement lastNameElement = driver.findElement(By.name(lastName));
+        Assert.assertTrue(lastNameElement.isDisplayed());
+        lastNameElement.sendKeys(formData.lastNameLong);
     }
 
     public void fillCountryField() {
-        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.country);
+        WebElement countryFieldElement = driver.findElement(By.cssSelector(dropdownCss));
+        Assert.assertTrue(countryFieldElement.isDisplayed());
+        countryFieldElement.sendKeys(formData.country);
     }
 
     public void fillDifferentCountryField() {
-        driver.findElement(By.cssSelector(dropdownCss)).sendKeys(formData.differentCountry);
+        WebElement countryFieldElement = driver.findElement(By.cssSelector(dropdownCss));
+        Assert.assertTrue(countryFieldElement.isDisplayed());
+        countryFieldElement.sendKeys(formData.differentCountry);
     }
 
     public void clickCheckBoxField() {
-        driver.findElement(By.name(checkboxName)).click();
+        WebElement checkboxElement = driver.findElement(By.name(checkboxName));
+        Assert.assertTrue(checkboxElement.isDisplayed());
+        checkboxElement.click();
     }
 
     public void clickPrintSubs() {
@@ -167,74 +189,47 @@ public class Subscription {
     }
 
     public void submitFormEmail() {
-        driver.findElement(By.cssSelector(submitBtnCss)).click();
+        WebElement submitButtonElement = driver.findElement(By.cssSelector(submitBtnCss));
+        Assert.assertTrue(submitButtonElement.isDisplayed());
+        submitButtonElement.click();
     }
 
     public void validateSuccessMessagePrinted(String expectedResultPrint) {
         String actualStatus = driver.findElement(By.cssSelector(successStatusP)).getText();
-        softAssert.assertEquals(actualStatus, expectedResultPrint, "Response result doesn't met, test failed!");
-        softAssert.assertAll();
-    }
-
-    public boolean isSuccessMessageVisible(String cssLocator) {
-        try {
-            return driver.findElement(By.cssSelector(cssLocator)).isDisplayed();
-        } catch (NoSuchElementException e) {
-            return false;
-        }
     }
 
     public void validateSuccessMessageEmail(String expectedResultEmail) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-
-        if (!isSuccessMessageVisible(successStatusClass)) {
-            System.out.println("Element is not visible or does not exist.");
-            return;
-        }
-
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(successStatusClass)));
-        String actualStatus = driver.findElement(By.cssSelector(successStatusClass)).getText();
 
-        if (actualStatus.isEmpty()) {
-            System.out.println("Actual result is empty.");
-            return;
-        }
-        softAssert.assertEquals(actualStatus, expectedResultEmail, "Response result doesn't match, test failed!");
+        WebElement successMessageElement = driver.findElement(By.cssSelector(successStatusClass));
+        Assert.assertTrue(successMessageElement.isDisplayed());
+        String actualStatus = successMessageElement.getText();
+        Assert.assertEquals(actualStatus, expectedResultEmail, "Response result doesn't match, test failed!");
     }
 
-    public boolean isEmailAlertPresent() {
-        return driver.findElement(By.xpath(emailAlert)).isDisplayed();
+    public void isEmailAlertPresent() {
+        WebElement emailAlertElement = driver.findElement(By.xpath(emailAlert));
+        Assert.assertTrue(emailAlertElement.isDisplayed());
     }
 
-    public boolean isFirstNameAlertPresent() {
-        try {
-            return driver.findElement(By.xpath(firstNameAlert)).isDisplayed();
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+    public void isFirstNameAlertPresent() {
+        WebElement firstNameAlertElement = driver.findElement(By.xpath(firstNameAlert));
+        Assert.assertTrue(firstNameAlertElement.isDisplayed());
     }
 
-    public boolean isLastnameAlertPresent() {
-        try {
-            return driver.findElement(By.xpath(lastNameAlert)).isDisplayed();
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+    public void isLastNameAlertPresent() {
+        WebElement lastNameAlertElement = driver.findElement(By.xpath(lastNameAlert));
+        Assert.assertTrue(lastNameAlertElement.isDisplayed());
     }
 
-    public boolean isCountryAlertPresent() {
-        try {
-            return driver.findElement(By.xpath(countryAlert)).isDisplayed();
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+    public void isCountryAlertPresent() {
+        WebElement countryAlertElement = driver.findElement(By.xpath(countryAlert));
+        Assert.assertTrue(countryAlertElement.isDisplayed());
     }
 
-    public boolean isCheckboxAlertPresent() {
-        try {
-            return driver.findElement(By.xpath(checkboxAlert)).isDisplayed();
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+    public void isCheckboxAlertPresent() {
+        WebElement checkboxAlertElement = driver.findElement(By.xpath(checkboxAlert));
+        Assert.assertTrue(checkboxAlertElement.isDisplayed());
     }
 }
