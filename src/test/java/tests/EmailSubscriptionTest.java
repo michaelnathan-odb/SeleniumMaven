@@ -19,13 +19,16 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class EmailSubscriptionTest {
-    //add timestamp for the filepath
-    private final String filePath = "report/EmailSubsReporter.html";
+    String filePath;
     //report
     static ExtentReports extent = new ExtentReports();
     static ExtentSparkReporter sparkReporter;
@@ -41,6 +44,8 @@ public class EmailSubscriptionTest {
     @BeforeSuite(alwaysRun = true)
     public void setupSuite() throws IOException {
         extent = new ExtentReports();
+        String currentDate = new SimpleDateFormat("yyyy-MM-dd_HH-mm").format(new Date());
+        filePath = "report/EmailSubsReporter" + currentDate + ".html";
         sparkReporter = new ExtentSparkReporter(filePath);
         extent.attachReporter(sparkReporter);
 
