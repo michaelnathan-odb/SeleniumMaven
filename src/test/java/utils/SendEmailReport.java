@@ -12,6 +12,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -51,11 +53,15 @@ public class SendEmailReport {
 
         // Attach the report
         messageBodyPart = new MimeBodyPart();
-        String filename = dotenv.get("mail.attachmentPath");
-        DataSource source = new FileDataSource(filename);
+        String fileName = dotenv.get("mail.attachmentName");
+        String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String result = String.format(fileName, currentDate);
+        DataSource source = new FileDataSource(filePath);
         messageBodyPart.setDataHandler(new DataHandler(source));
-        messageBodyPart.setFileName(filename);
+        messageBodyPart.setFileName(result);
         multipart.addBodyPart(messageBodyPart);
+
+        System.out.println(result);
 
         // Combine message parts
         message.setContent(multipart);

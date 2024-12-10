@@ -19,12 +19,10 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class EmailSubscriptionTest {
@@ -45,7 +43,8 @@ public class EmailSubscriptionTest {
     public void setupSuite() throws IOException {
         extent = new ExtentReports();
         String currentDate = new SimpleDateFormat("yyyy-MM-dd_HH-mm").format(new Date());
-        filePath = "report/EmailSubsReporter" + currentDate + ".html";
+        String fileName = "EmailSubsReporter" + currentDate + ".html";
+        filePath = "report/" + fileName;
         sparkReporter = new ExtentSparkReporter(filePath);
         extent.attachReporter(sparkReporter);
 
@@ -91,6 +90,8 @@ public class EmailSubscriptionTest {
             ExtentTest test = resolutionTest.createNode("Scenario :" + scenario);
             threadLocalTest.set(test);
         }
+//        ReportData reportData = new ReportData(test, browser, site, resolution, scenario);
+//        scenarioTest.add(reportData);
         threadLocalTest.get();
     }
 
