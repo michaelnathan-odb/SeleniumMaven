@@ -61,8 +61,6 @@ public class SendEmailReport {
         messageBodyPart.setFileName(result);
         multipart.addBodyPart(messageBodyPart);
 
-        System.out.println(result);
-
         // Combine message parts
         message.setContent(multipart);
         // Send the email

@@ -45,6 +45,7 @@ public class EmailSubscriptionTest {
         String currentDate = new SimpleDateFormat("yyyy-MM-dd_HH-mm").format(new Date());
         String fileName = "EmailSubsReporter" + currentDate + ".html";
         filePath = "report/" + fileName;
+        //
         sparkReporter = new ExtentSparkReporter(filePath);
         extent.attachReporter(sparkReporter);
 
@@ -88,10 +89,12 @@ public class EmailSubscriptionTest {
         if (resolutionMap.containsKey(resolutionKey)) {
             ExtentTest resolutionTest = resolutionMap.get(resolutionKey);
             ExtentTest test = resolutionTest.createNode("Scenario :" + scenario);
+
+            ReportData reportData = new ReportData(test, browser, site, resolution, scenario);
+            scenarioTest.add(reportData);
+
             threadLocalTest.set(test);
         }
-//        ReportData reportData = new ReportData(test, browser, site, resolution, scenario);
-//        scenarioTest.add(reportData);
         threadLocalTest.get();
     }
 
