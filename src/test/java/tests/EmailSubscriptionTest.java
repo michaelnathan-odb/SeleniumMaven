@@ -20,9 +20,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class EmailSubscriptionTest {
@@ -34,7 +32,7 @@ public class EmailSubscriptionTest {
     private static final ThreadLocal<WebDriver> threadLocal = new ThreadLocal<WebDriver>();
     private static final ThreadLocal<ExtentTest> threadLocalTest = new ThreadLocal<ExtentTest>();
 
-    private final List<ReportData> scenarioTest = new ArrayList<>();
+    private final ConcurrentHashMap<String, ReportData> scenarioTest = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, ExtentTest> siteMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, ExtentTest> browserMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, ExtentTest> resolutionMap = new ConcurrentHashMap<>();
@@ -90,8 +88,10 @@ public class EmailSubscriptionTest {
             ExtentTest resolutionTest = resolutionMap.get(resolutionKey);
             ExtentTest test = resolutionTest.createNode("Scenario :" + scenario);
 
+            String key = resolutionKey + "_" + scenario;
+
             ReportData reportData = new ReportData(test, browser, site, resolution, scenario);
-            scenarioTest.add(reportData);
+            scenarioTest.put(key, reportData);
 
             threadLocalTest.set(test);
         }
@@ -119,7 +119,7 @@ public class EmailSubscriptionTest {
         subscription.validateSuccessMessageEmail(expectedResultEmail);
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupC")
+    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = {"groupB", "groupC"})
     void testEmailSubsWithoutFirstAndLastName(String browser, String site, String resolution, String expectedResultEmail) throws InterruptedException, MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Scenario Test: Subscription with optional fields left blank (without first name and last name)");
 

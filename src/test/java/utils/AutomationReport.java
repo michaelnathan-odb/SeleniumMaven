@@ -3,25 +3,37 @@ package utils;
 import com.aventstack.extentreports.Status;
 import tests.ReportData;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AutomationReport {
-    public static String createEmailBody(List<ReportData> scenarioTests) {
+    public static String createEmailBody(ConcurrentHashMap<String, ReportData> scenarioTests) {
         StringBuilder emailBody = new StringBuilder();
+
+        // Inline CSS styles for table
+        String styles = "<head><style>"
+                + "table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 16px; font-family: Arial, sans-serif; }"
+                + "th, td { border: 1px solid black; text-align: center; padding: 8px; }"
+                + "th { background-color: #f4f4f4; font-weight: bold; }"
+                + "tr:nth-child(even) { background-color: #f9f9f9; }" // Alternate row coloring for better readability
+                + "td { border: 1px solid black; }"
+                + "</style></head>";
+
         emailBody.append("<h1>Test Report</h1>");
+        emailBody.append(styles);
+
+        //TODO: Add a description for the test summary
 
         //Create map to group results by site and browser
         Map<String, Map<String, TestResultSummary>> reportStructure = new ConcurrentHashMap<>();
-
         Set<String> allBrowsers = new TreeSet<>(); // To keep track of all unique browsers
 
-        for (ReportData reportData : scenarioTests) {
+        for (ReportData reportData : scenarioTests.values()) {
             String site = reportData.site;
             String browser = reportData.browser;
+            String scenario = reportData.scenario;
 
             allBrowsers.add(browser);
 
@@ -34,29 +46,21 @@ public class AutomationReport {
 
             //Update the test result summary for the browser
             TestResultSummary summary = browserMap.get(browser);
-            System.out.println(site + "--" + browser + "--" + reportData.test.getStatus());
             if (reportData.test.getStatus() == Status.PASS) {
                 summary.incrementSuccess();
             } else {
                 summary.incrementFailed();
             }
         }
-//        for (Map.Entry<String, Map<String, TestResultSummary>> siteEntry : reportStructure.entrySet()) {
-//            String site = siteEntry.getKey();
-//            Map<String, TestResultSummary> browserMap = siteEntry.getValue();
-//            for (Map.Entry<String, TestResultSummary> browserEntry : browserMap.entrySet()) {
-//                String browser = browserEntry.getKey();
-//                TestResultSummary result = browserEntry.getValue();
-//                System.out.println(site + "--" + browser + "==" + result.successCount + "+++" + result.failedCount);
-//            }
-//        }
 
-        //TODO: Generate table header
-        emailBody.append("<table border='1'>");
-        emailBody.append("<thead><tr><th>Site</th>");
+        // Generate the table header
+        emailBody.append("<table>");
+        emailBody.append("<thead><tr><th rowspan='2'>Site</th>");
         for (String browser : allBrowsers) {
-            emailBody.append("<th>").append(browser).append("</th>");
+            emailBody.append("<th colspan='2'>").append(browser).append("</th>");
         }
+        emailBody.append("</tr><tr>");
+        emailBody.append("<th>Success</th><th>Failed</th>".repeat(allBrowsers.size()));
         emailBody.append("</tr></thead>");
 
         // Generate the table body
@@ -69,18 +73,22 @@ public class AutomationReport {
             for (String browser : allBrowsers) {
                 TestResultSummary summary = browserMap.get(browser);
                 if (summary != null) {
-                    emailBody.append("<td>")
+                    emailBody.append("<td style='color: green; font-weight: bold;'>")
                             .append(summary.getSuccessCount())
-                            .append("/")
+                            .append("</td>");
+                    emailBody.append("<td style='color: red; font-weight: bold;'>")
                             .append(summary.getFailedCount())
                             .append("</td>");
                 } else {
-                    emailBody.append("<td>0/0</td>"); // Default for missing browsers
+                    emailBody.append("<td>0</td><td>0</td>"); // Default for missing browsers
                 }
             }
             emailBody.append("</tr>");
         }
         emailBody.append("</tbody></table>");
+
+        //TODO: Add scenario list
+
 
         return emailBody.toString();
     }

@@ -14,11 +14,11 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SendEmailReport {
-    public static void sendReport(String filePath, List<ReportData> scenarioTest) throws MessagingException {
+    public static void sendReport(String filePath, ConcurrentHashMap<String, ReportData> scenarioTest) throws MessagingException {
         Properties props = new Properties();
         Dotenv dotenv = Dotenv.load();
         String username = dotenv.get("mail.username");
