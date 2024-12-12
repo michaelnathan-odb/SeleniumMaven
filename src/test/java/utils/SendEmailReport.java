@@ -3,7 +3,6 @@ package utils;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.github.cdimascio.dotenv.DotenvEntry;
 import tests.ReportData;
-
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -52,9 +51,9 @@ public class SendEmailReport {
         // Attach the report
         messageBodyPart = new MimeBodyPart();
         String filename = dotenv.get("mail.attachmentPath");
-        DataSource source = new FileDataSource(filename);
+        DataSource source = new FileDataSource(filePath);
         messageBodyPart.setDataHandler(new DataHandler(source));
-        messageBodyPart.setFileName(filename);
+        messageBodyPart.setFileName(filePath);
         multipart.addBodyPart(messageBodyPart);
 
         // Combine message parts
