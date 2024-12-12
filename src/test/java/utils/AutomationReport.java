@@ -3,9 +3,7 @@ package utils;
 import com.aventstack.extentreports.Status;
 import tests.ReportData;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AutomationReport {
@@ -14,21 +12,23 @@ public class AutomationReport {
 
         // Inline CSS styles for table
         String styles = "<head><style>"
-                + "table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 16px; font-family: Arial, sans-serif; }"
-                + "th, td { border: 1px solid black; text-align: center; padding: 8px; }"
+                + "table { width: 100%; border-collapse: collapse; margin: 5px 0px; font-size: 16px; font-family: Arial, sans-serif; }"
+                + "th, td { border: 1px solid black; text-align: center; padding: 5px; }"
                 + "th { background-color: #f4f4f4; font-weight: bold; }"
                 + "tr:nth-child(even) { background-color: #f9f9f9; }" // Alternate row coloring for better readability
                 + "td { border: 1px solid black; }"
                 + "</style></head>";
 
-        emailBody.append("<h1>Test Report</h1>");
         emailBody.append(styles);
+        emailBody.append("<h2>Test Report</h2>");
 
         //TODO: Add a description for the test summary
+        emailBody.append("<p>Following is the test summary report for the automation test execution</p>");
 
         //Create map to group results by site and browser
         Map<String, Map<String, TestResultSummary>> reportStructure = new ConcurrentHashMap<>();
         Set<String> allBrowsers = new TreeSet<>(); // To keep track of all unique browsers
+        Set<String> allScenario = new TreeSet<>(); // To keep track of all unique scenario
 
         for (ReportData reportData : scenarioTests.values()) {
             String site = reportData.site;
@@ -36,6 +36,7 @@ public class AutomationReport {
             String scenario = reportData.scenario;
 
             allBrowsers.add(browser);
+            allScenario.add(scenario);
 
             //Ensure the site exists in the map
             reportStructure.putIfAbsent(site, new ConcurrentHashMap<>());
@@ -87,8 +88,17 @@ public class AutomationReport {
         }
         emailBody.append("</tbody></table>");
 
-        //TODO: Add scenario list
-
+        emailBody.append("<br>");
+        emailBody.append("<p>Following is the list of included test scenario</p>");
+        emailBody.append("<table>");
+        emailBody.append("<tr><th>Tested Scenario</th></tr>");
+        for(String scenario : allScenario){
+            emailBody.append("<tr><td colspan='2' style='vertical-align: bottom; text-align: left; '>")
+                    .append("<span style='font-family: Arial; font-size: small;'>")
+                    .append(scenario)
+                    .append("</span></td><tr>");
+        }
+        emailBody.append("</table>");
 
         return emailBody.toString();
     }

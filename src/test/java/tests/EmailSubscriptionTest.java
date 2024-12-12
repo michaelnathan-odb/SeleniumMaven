@@ -100,7 +100,7 @@ public class EmailSubscriptionTest {
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
     void testEmailSubsWithValidData(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
-        createTestNodes(site, browser, resolution, "Scenario Test: Successful subscription with valid input");
+        createTestNodes(site, browser, resolution, "Successful subscription with valid input");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
@@ -121,7 +121,7 @@ public class EmailSubscriptionTest {
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = {"groupB", "groupC"})
     void testEmailSubsWithoutFirstAndLastName(String browser, String site, String resolution, String expectedResultEmail) throws InterruptedException, MalformedURLException, URISyntaxException {
-        createTestNodes(site, browser, resolution, "Scenario Test: Subscription with optional fields left blank (without first name and last name)");
+        createTestNodes(site, browser, resolution, "Subscription with optional fields left blank (without first name and last name)");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
@@ -139,7 +139,7 @@ public class EmailSubscriptionTest {
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
     void testEmailSubsWithDifferentCountry(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
-        createTestNodes(site, browser, resolution, "Scenario Test: Subscription with a different country selection");
+        createTestNodes(site, browser, resolution, "Subscription with a different country selection");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
@@ -158,7 +158,7 @@ public class EmailSubscriptionTest {
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubsWithInvalidEmail(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
-        createTestNodes(site, browser, resolution, "Scenario Test: Subscription with an invalid email format");
+        createTestNodes(site, browser, resolution, "Subscription with an invalid email format");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
@@ -177,7 +177,7 @@ public class EmailSubscriptionTest {
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubsWithoutCheckAgreement(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
-        createTestNodes(site, browser, resolution, "Scenario Test: Subscription without checking the agreement checkbox");
+        createTestNodes(site, browser, resolution, "Subscription without checking the agreement checkbox");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
@@ -195,7 +195,7 @@ public class EmailSubscriptionTest {
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubsWithBlankEmail(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
-        createTestNodes(site, browser, resolution, "Scenario Test: Submission with blank email");
+        createTestNodes(site, browser, resolution, "Submission with blank email");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
@@ -214,7 +214,7 @@ public class EmailSubscriptionTest {
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubsWithoutCountrySelection(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
-        createTestNodes(site, browser, resolution, "Scenario Test: Submission without country selection");
+        createTestNodes(site, browser, resolution, "Submission without country selection");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
@@ -234,7 +234,7 @@ public class EmailSubscriptionTest {
     //Attempt to submit without filling in any fields
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubsWithoutFillAnyField(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
-        createTestNodes(site, browser, resolution, "Scenario Test: Attempt to submit without filling in any fields");
+        createTestNodes(site, browser, resolution, "Attempt to submit without filling in any fields");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
@@ -252,7 +252,7 @@ public class EmailSubscriptionTest {
 
     @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
     void testEmailSubsWithExtraLongData(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
-        createTestNodes(site, browser, resolution, "Scenario Test: Subscription with extra long information");
+        createTestNodes(site, browser, resolution, "Subscription with extra long information");
 
         threadLocal.set(BrowserConfig.getDriver(browser));
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
