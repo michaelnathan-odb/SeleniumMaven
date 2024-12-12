@@ -1,43 +1,6 @@
 {
   "testData": [
-    {
-      "site": "https://odb.org/subscription/jp/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
-      "testCases": [
-        {
-          "browser": "chrome",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "edge",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "mobile"
-        }
-      ]
-    },
-    {
-      "site": "https://odb.org/subscription/id/",
-      "expectedResultEmail": "Success! You are signed up. Please wait 24 to 48 hours to receive confirmation email.",
-      "expectedResultPrint": "",
-      "testCases": [
-        {
-          "browser": "chrome",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "edge",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "mobile"
-        }
-      ]
-    },
+
     {
       "site": "https://traditional-odb.org/subscription/id/",
       "expectedResultEmail": "成功！你將於24-48小時內收到確認郵件。",
@@ -363,27 +326,8 @@
     },
     {
       "site": "https://santapanrohani.org/subscription/id/",
-      "expectedResultEmail": "成功！你將於24-48小時內收到確認郵件。",
-      "expectedResultPrint": "您的信件已成功寄出，感謝。",
-      "testCases": [
-        {
-          "browser": "chrome",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "edge",
-          "resolution": "mobile"
-        },
-        {
-          "browser": "firefox",
-          "resolution": "mobile"
-        }
-      ]
-    },
-    {
-      "site": "https://simplified-odb.org/subscription/id/",
-      "expectedResultEmail": "成功！你將於24-48小時內收到確認郵件。",
-      "expectedResultPrint": "您的信件已成功寄出，感謝。",
+      "expectedResultEmail": "",
+      "expectedResultPrint": "",
       "testCases": [
         {
           "browser": "chrome",

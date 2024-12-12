@@ -25,7 +25,7 @@ This project automates testing for subscription forms across multiple regional w
 ## Technologies Used
 - **Programming Language**: Java
 - **Testing Framework**: TestNG
-- **Automation Tool**: Selenium WebDriver
+- **Automation Tool**: Selenium Docker
 - **Reporting Tool**: ExtentReports (Spark Reporter)
 - **Data Handling**: JSON
 
@@ -94,7 +94,7 @@ This file is required to store the SMTP configuration for sending email feature.
   "testData": [
     {
       "site": "https://odb.org/subscription/au/",
-      "expectedResultEmail": "[Expected result string]",
+      "expectedResultEmail": "Expected result string",
       "testCases": [
         {
           "browser": "chrome",
