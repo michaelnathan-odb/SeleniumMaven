@@ -12,11 +12,13 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SendEmailReport {
-    public static void sendReport(String filePath, List<ReportData> scenarioTest) throws MessagingException {
+    public static void sendReport(String filePath, ConcurrentHashMap<String, ReportData> scenarioTest) throws MessagingException {
         Properties props = new Properties();
         Dotenv dotenv = Dotenv.load();
         String username = dotenv.get("mail.username");
@@ -51,10 +53,12 @@ public class SendEmailReport {
 
         // Attach the report
         messageBodyPart = new MimeBodyPart();
-        String filename = dotenv.get("mail.attachmentPath");
-        DataSource source = new FileDataSource(filename);
+        String fileName = dotenv.get("mail.attachmentName");
+        String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String result = String.format(fileName, currentDate);
+        DataSource source = new FileDataSource(filePath);
         messageBodyPart.setDataHandler(new DataHandler(source));
-        messageBodyPart.setFileName(filename);
+        messageBodyPart.setFileName(result);
         multipart.addBodyPart(messageBodyPart);
 
         // Combine message parts
