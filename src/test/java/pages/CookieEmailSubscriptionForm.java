@@ -1,8 +1,6 @@
 package pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -10,8 +8,8 @@ import userInfo.FormData;
 
 import java.time.Duration;
 
-public class EmailSubscriptionFormWithoutCookie {
-    public EmailSubscriptionFormWithoutCookie(WebDriver driver) {
+public class CookieEmailSubscriptionForm {
+    public CookieEmailSubscriptionForm(WebDriver driver) {
         this.driver = driver;
     }
 
@@ -20,6 +18,7 @@ public class EmailSubscriptionFormWithoutCookie {
 
     //email subscription form locator
     public static String emailBtnCss = "li.email.subscription-tabs";
+    public static String closeCookie = "button.moove-gdpr-infobar-close-btn.gdpr-fbo-3";
     public static String emailName = "email";
     public static String firstName = "First Name";
     public static String lastName = "Last Name";
@@ -33,9 +32,17 @@ public class EmailSubscriptionFormWithoutCookie {
     public static String countryAlert = "//div[contains(@class, 'error-message') and contains(., 'Please select a country to continue.')]";
     public static String checkboxAlert = "//div[contains(@class, 'error-message') and contains(., 'Please indicate which email(s) you would like to receive.')]";
 
+
     public void clickEmailSubs() {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(emailBtnCss)));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(closeCookie)));
+
+        boolean cookiesElement = !driver.findElements(By.cssSelector(closeCookie)).isEmpty();
+        if (cookiesElement) {
+            WebElement cookieElement = driver.findElement(By.cssSelector(closeCookie));
+            Assert.assertTrue(cookieElement.isDisplayed());
+            cookieElement.click();
+        }
 
         WebElement emailButtonElement = driver.findElement(By.cssSelector(emailBtnCss));
         Assert.assertTrue(emailButtonElement.isDisplayed());

@@ -11,7 +11,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
-import pages.Subscription;
+import pages.NoCookieEmailSubscriptionForm;
 import utils.SendEmailReport;
 import utils.TestDataProvider;
 
@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class EmailSubscriptionTest {
+public class NoCookieEmailTest {
     String filePath;
     //report
     static ExtentReports extent = new ExtentReports();
@@ -41,14 +41,14 @@ public class EmailSubscriptionTest {
     public void setupSuite() throws IOException {
         extent = new ExtentReports();
         String currentDate = new SimpleDateFormat("yyyy-MM-dd_HH-mm").format(new Date());
-        String fileName = "EmailSubsReporter" + currentDate + ".html";
+        String fileName = "NoCookieEmailSubsReporter" + currentDate + ".html";
         filePath = "report/" + fileName;
         //
         sparkReporter = new ExtentSparkReporter(filePath);
         extent.attachReporter(sparkReporter);
 
         TestDataProvider testDataProvider = new TestDataProvider();
-        Object[][] data = testDataProvider.dataProvider();
+        Object[][] data = testDataProvider.providerWithoutCookie();
         for (Object[] object : data) {
             String site = (String) object[1];
             String browser = (String) object[0];
@@ -98,7 +98,7 @@ public class EmailSubscriptionTest {
         threadLocalTest.get();
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
+    @Test(dataProvider = "providerWithoutCookie", dataProviderClass = TestDataProvider.class, groups = "groupA")
     void testEmailSubsWithValidData(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Successful subscription with valid input");
 
@@ -106,7 +106,7 @@ public class EmailSubscriptionTest {
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
         threadLocal.get().get(site);
 
-        Subscription subscription = new Subscription(threadLocal.get());
+        NoCookieEmailSubscriptionForm subscription = new NoCookieEmailSubscriptionForm(threadLocal.get());
         subscription.clickEmailSubs();
 
         subscription.fillEmailField();
@@ -119,7 +119,7 @@ public class EmailSubscriptionTest {
         subscription.validateSuccessMessageEmail(expectedResultEmail);
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = {"groupB", "groupC"})
+    @Test(dataProvider = "providerWithoutCookie", dataProviderClass = TestDataProvider.class, groups = {"groupB", "groupC"})
     void testEmailSubsWithoutFirstAndLastName(String browser, String site, String resolution, String expectedResultEmail) throws InterruptedException, MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Subscription with optional fields left blank (without first name and last name)");
 
@@ -127,7 +127,7 @@ public class EmailSubscriptionTest {
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
         threadLocal.get().get(site);
 
-        Subscription subscription = new Subscription(threadLocal.get());
+        NoCookieEmailSubscriptionForm subscription = new NoCookieEmailSubscriptionForm(threadLocal.get());
         subscription.clickEmailSubs();
         subscription.fillEmailField();
         subscription.fillCountryField();
@@ -137,7 +137,7 @@ public class EmailSubscriptionTest {
         subscription.isLastNameAlertPresent();
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
+    @Test(dataProvider = "providerWithoutCookie", dataProviderClass = TestDataProvider.class, groups = "groupA")
     void testEmailSubsWithDifferentCountry(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Subscription with a different country selection");
 
@@ -145,7 +145,7 @@ public class EmailSubscriptionTest {
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
         threadLocal.get().get(site);
 
-        Subscription subscription = new Subscription(threadLocal.get());
+        NoCookieEmailSubscriptionForm subscription = new NoCookieEmailSubscriptionForm(threadLocal.get());
         subscription.clickEmailSubs();
         subscription.fillEmailField();
         subscription.fillFirstNameField();
@@ -156,7 +156,7 @@ public class EmailSubscriptionTest {
         subscription.validateSuccessMessageEmail(expectedResultEmail);
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
+    @Test(dataProvider = "providerWithoutCookie", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubsWithInvalidEmail(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Subscription with an invalid email format");
 
@@ -164,7 +164,7 @@ public class EmailSubscriptionTest {
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
         threadLocal.get().get(site);
 
-        Subscription subscription = new Subscription(threadLocal.get());
+        NoCookieEmailSubscriptionForm subscription = new NoCookieEmailSubscriptionForm(threadLocal.get());
         subscription.clickEmailSubs();
         subscription.fillInvalidEmailField();
         subscription.fillFirstNameField();
@@ -175,7 +175,7 @@ public class EmailSubscriptionTest {
         subscription.isEmailAlertPresent();
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
+    @Test(dataProvider = "providerWithoutCookie", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubsWithoutCheckAgreement(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Subscription without checking the agreement checkbox");
 
@@ -183,7 +183,7 @@ public class EmailSubscriptionTest {
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
         threadLocal.get().get(site);
 
-        Subscription subscription = new Subscription(threadLocal.get());
+        NoCookieEmailSubscriptionForm subscription = new NoCookieEmailSubscriptionForm(threadLocal.get());
         subscription.clickEmailSubs();
         subscription.fillEmailField();
         subscription.fillFirstNameField();
@@ -193,7 +193,7 @@ public class EmailSubscriptionTest {
         subscription.isCheckboxAlertPresent();
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
+    @Test(dataProvider = "providerWithoutCookie", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubsWithBlankEmail(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Submission with blank email");
 
@@ -201,7 +201,7 @@ public class EmailSubscriptionTest {
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
         threadLocal.get().get(site);
 
-        Subscription subscription = new Subscription(threadLocal.get());
+        NoCookieEmailSubscriptionForm subscription = new NoCookieEmailSubscriptionForm(threadLocal.get());
         subscription.clickEmailSubs();
         subscription.fillFirstNameField();
         subscription.fillLastNameField();
@@ -212,7 +212,7 @@ public class EmailSubscriptionTest {
     }
 
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
+    @Test(dataProvider = "providerWithoutCookie", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubsWithoutCountrySelection(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Submission without country selection");
 
@@ -220,7 +220,7 @@ public class EmailSubscriptionTest {
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
         threadLocal.get().get(site);
 
-        Subscription subscription = new Subscription(threadLocal.get());
+        NoCookieEmailSubscriptionForm subscription = new NoCookieEmailSubscriptionForm(threadLocal.get());
         subscription.clickEmailSubs();
 
         subscription.fillEmailField();
@@ -232,7 +232,7 @@ public class EmailSubscriptionTest {
     }
 
     //Attempt to submit without filling in any fields
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupB")
+    @Test(dataProvider = "providerWithoutCookie", dataProviderClass = TestDataProvider.class, groups = "groupB")
     void testEmailSubsWithoutFillAnyField(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Attempt to submit without filling in any fields");
 
@@ -240,7 +240,7 @@ public class EmailSubscriptionTest {
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
         threadLocal.get().get(site);
 
-        Subscription subscription = new Subscription(threadLocal.get());
+        NoCookieEmailSubscriptionForm subscription = new NoCookieEmailSubscriptionForm(threadLocal.get());
         subscription.clickEmailSubs();
         subscription.submitFormEmail();
         subscription.isEmailAlertPresent();
@@ -250,7 +250,7 @@ public class EmailSubscriptionTest {
         subscription.isCheckboxAlertPresent();
     }
 
-    @Test(dataProvider = "provider", dataProviderClass = TestDataProvider.class, groups = "groupA")
+    @Test(dataProvider = "providerWithoutCookie", dataProviderClass = TestDataProvider.class, groups = "groupA")
     void testEmailSubsWithExtraLongData(String browser, String site, String resolution, String expectedResultEmail) throws MalformedURLException, URISyntaxException {
         createTestNodes(site, browser, resolution, "Subscription with extra long information");
 
@@ -258,7 +258,7 @@ public class EmailSubscriptionTest {
         ScreenSizeConfig.setScreenSize(threadLocal.get(), resolution);
         threadLocal.get().get(site);
 
-        Subscription subscription = new Subscription(threadLocal.get());
+        NoCookieEmailSubscriptionForm subscription = new NoCookieEmailSubscriptionForm(threadLocal.get());
         subscription.clickEmailSubs();
         subscription.fillEmailFieldDummy();
         subscription.fillLongFirstNameField();

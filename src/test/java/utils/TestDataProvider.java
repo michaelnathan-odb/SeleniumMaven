@@ -15,7 +15,7 @@ public class TestDataProvider {
     @DataProvider(name = "provider", parallel = true)
     public Object[][] dataProvider() throws IOException {
         // Parse the JSON file
-        FileReader reader = new FileReader("src/main/resources/testData2.json");
+        FileReader reader = new FileReader("src/main/resources/CookieEmailTestData.json");
         JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
 
         // Get the testData array from JSON
@@ -51,7 +51,7 @@ public class TestDataProvider {
     @DataProvider(name = "providerWithoutCookie", parallel = true)
     public Object[][] providerWithoutCookie() throws IOException {
         // Parse the JSON file
-        FileReader reader = new FileReader("src/main/resources/testDataSites.json");
+        FileReader reader = new FileReader("src/main/resources/NoCookieTestData.json");
         JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
 
         // Get the testData array from JSON
