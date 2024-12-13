@@ -33,7 +33,7 @@ public class EmailSubscriptionWithoutCookieTest {
     private static final ThreadLocal<WebDriver> threadLocal = new ThreadLocal<WebDriver>();
     private static final ThreadLocal<ExtentTest> threadLocalTest = new ThreadLocal<ExtentTest>();
 
-    private final List<ReportData> scenarioTest = new ArrayList<>();
+    private final ConcurrentHashMap<String, ReportData> scenarioTest = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, ExtentTest> siteMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, ExtentTest> browserMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, ExtentTest> resolutionMap = new ConcurrentHashMap<>();

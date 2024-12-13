@@ -1,7 +1,7 @@
 # Selenium Automated Subscription Form Testing
 
 ## About the Project
-This project automates testing for subscription forms across multiple regional websites using Selenium WebDriver. It ensures that the forms are accessible, functional, and compliant across various devices and browsers.
+This project automates testing for subscription forms across multiple regional websites using Selenium Docker. It ensures that the forms are accessible, functional, and compliant across various devices and browsers.
 
 **Note**: Current project process are still testing for the Email Subscription Form for `odb.org` site. Some region with different form are excluded (e.g. Singapore, US, UK, etc.)  
 
@@ -12,15 +12,17 @@ This project automates testing for subscription forms across multiple regional w
 - [Pre-requisites](#prerequisites)
 - [Setup Instructions](#setup-instructions)
 - [Usage](#usage)
+- [Modification](#modification)
 - [Improvement Needs](#improvement-needs)
 
 ## Features
-- Cross-browser (Chrome, Firefox, MS Edge) and cross-screen-resolution (Mobile, Tablet, Desktop) testing
-- Data-driven testing with JSON configurations
-- Automated email reporting
-- Supports parallel testing
-- ExtentReports for detailed HTML reports
-- Run the test with various scenario (submitting valid and invalid data)
+- Cross-browser testing (Chrome, Firefox, Edge)
+- Cross-screen-resolution testing (Mobile, Tablet, Desktop)
+- Data-driven testing using JSON configurations 
+- Automated email reporting 
+- Parallel test execution support 
+- Detailed HTML reports using ExtentReports 
+- Validation scenarios for submitting valid and invalid form data
 
 ## Technologies Used
 - **Programming Language**: Java
@@ -44,47 +46,32 @@ Before setting up and running this project, ensure the following requirements ar
     ```bash
     mvn --version
     ```
-
-### **2. Add Browsers to the Environment Variable Path**
-- Ensure the browser(s) you plan to use for testing (e.g., Chrome, Firefox, Edge) are installed on your system.
-- Add the browser executables to your system's Environment Variable `PATH` to allow the project to locate them easily:
-  - **For Windows**:
-    1. Open System Properties → Advanced → Environment Variables.
-    2. Under "System Variables," find `PATH` and click "Edit."
-    3. Add the path to the browser executable (e.g., `C:\Program Files\Google\Chrome\Application\`).
-  - **For macOS/Linux**:
-    Add the browser path to your shell configuration file (e.g., `.bashrc`, `.zshrc`):
+### **2. Install Docker**
+- Install Docker on your system:
+  - [Download Docker](https://www.docker.com/get-started)
+  - Verify the installation:
     ```bash
-    export PATH=$PATH:/path/to/browser
+    docker --version
     ```
 
-### **3. Download and Configure WebDrivers**
-- Download the appropriate WebDriver for the browser and version you intend to use:
-  - [ChromeDriver](https://googlechromelabs.github.io/chrome-for-testing/) for Google Chrome
-  - [GeckoDriver](https://github.com/mozilla/geckodriver/releases) for Firefox
-  - [Edge WebDriver](https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/) for Microsoft Edge
-
-- **Place the WebDriver**:  
-  Copy the downloaded WebDriver executables into the `src/main/resources/driver/` directory of the project.
-
-- **If using a different operating system**:  
-  Ensure you download the WebDriver compatible with your OS (e.g., `.exe` for Windows, Unix binary for macOS/Linux) and update the `BrowserConfig` class in the project if necessary.
-
-
 ## Setup Instructions
-### Importing Project
-1. Clone the repository:
+### **1. Clone the Repository**
 ```bash
 git clone https://github.com/michaelnathan-odb/SeleniumMaven.git
+cd SeleniumMaven
 ```
 
-2. Navigate to the project directory:
-```bash
-cd your-project-directory
-```
+### **2. Configure the `.env` File**
+- The `.env` file is required to store SMTP credentials for the email reporting feature.
+- Refer to the `.env-example` file for guidance on the required fields.
+- Contact the DevOps team to obtain SMTP access details.
 
-### Set the .env file
-This file is required to store the SMTP configuration for sending email feature. Please refer to `.env-example` file for checking what credential that you need to fill it out. Ask DevOps team for the SMTP Access.
+### **3. Run Selenium Docker Containers**
+- Start the Selenium Grid and browser nodes:
+  ```bash
+  docker-compose -f docker-compose.yml up -d
+  ```
+- Verify the Selenium Grid setup at: `http://localhost:4444`.
 
 ## Usage
 ### Working with Data-Driven
@@ -108,30 +95,52 @@ This file is required to store the SMTP configuration for sending email feature.
 
 - Please update the JSON reader function in `src/test/java/utils/TestDataProvider.java` by replacing `"src/main/resources/testData2.json"` with the path to your actual test data file.
 ```
-FileReader reader = new FileReader("src/main/resources/testData2.json");
+FileReader reader = new FileReader("src/main/resources/testData.json");
 ```
 
 ### How to run it
 The project uses Maven to manage dependencies. Run the following command to download and install all required dependencies:
-```bash
-mvn clean install
-```
 
 Run the tests using Maven:
 ```bash
-mvn test -Dgroups="groupA,groupB"
+mvn clean test -Dtest="<test-classes>" -Dgroups="<groups-name>"
 ```
-- `-Dgroups="groupA,groupB"`: Run the test on specific labeled test cases. You can customize the grouping by adding the "groups" tag. Learn more about grouping [here](https://toolsqa.com/testng/groups-in-testng/). 
-- Make sure to add double-quote when defining multiple argument
+- `-Dgroups="<group-name>"`: Run the test on specific labeled test cases. You can customize the grouping by adding the "groups" tag. Learn more about grouping [here](https://toolsqa.com/testng/groups-in-testng/).
+- Make sure to add double-quote when defining multiple argument.
 
 ### Troubleshooting
-If you find error when running the test, use this command to run test in debug-level logging:
+1. If you find error when running the test, use this command to run test in debug-level logging:
 ```bash
-mvn test -X -Dgroups="groupB"
+mvn test -X <test-arguments>
 ```
+2. **View Reports**:  
+   Open the following files in a browser to review test results:
+  - `target/surefire-reports/emailable-report.html`
+  - `target/surefire-reports/index.html`
+
+## Modification
+To add new test cases (e.g., for the Printed Subscription Form or other forms with different layouts), follow these steps using the Page Object Model (POM) pattern:
+
+1. **Create a Page Class**:
+  - Define locators for the DOM elements and implement methods for page interactions.
+
+2. **Create a Test Class**:
+  - Develop a new test class (e.g., `PrintedSubscriptionTest`).
+  - Follow the structure of existing test classes, ensuring to update DataProvider-related code.
+
+3. **Add a JSON File**:
+  - Store test data (e.g., sites, browsers, resolutions) in a new JSON file.
+
+4. **Update TestDataProvider**:
+  - Implement a new method in the `TestDataProvider` class to read the JSON file for the new test class.
+
+5. **Run the Test**:
+  - Execute the test using the `-Dtest` parameter in the terminal:
+    ```bash
+    mvn clean test -Dtest="<TestClassName>"
+    ```
 
 ## Improvement Needs
 - Please update README.md file if there is any improvement are implemented
-- Layout of the email body report
 - Test for Printed Subscription Form
-- Page Object Model for different Email Subscription Form layout
+- Develop Page Object Models (POM) for other Email Subscription Form layouts.
